@@ -31,9 +31,9 @@ class Player(pygame.sprite.Sprite):
 
     #update will update the players position on the screen
     def update(self, x_change, y_change):
-        #self.x += x_change
-        #self.y += y_change
-
+        
+	#This structure determines what function to call
+	#Function called depends on value of the x_change/y_change variables.
         if x_change < 0:
             self.move_left(x_change)
         if x_change > 0:
