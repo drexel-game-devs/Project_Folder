@@ -3,7 +3,9 @@
 So this is the General Project Folder.
 This will contain all assets, art, code, etc. 
 
-Please make sure to put relevant files inside their relevant folders (i.e art goes in Art folder, code in Code etc.)
+Please make sure to put relevant files inside their relevant folders.
+Please try to maintain the README.md file, so that it accurately reflects the various directories and subdirectories. 
+If possible, try to maintain the format that follows below. Thank you. -- Fry
 
 Code:
   
