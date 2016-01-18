@@ -18,4 +18,6 @@ Profile and Requirements:
     
     Pygame Install Instructions - instructions for downloading and configuring pygame 3.2 for your computer
     
+    Requirements - Text file that lays out the basic functional requirements of our project.
+    
     
