@@ -9,8 +9,13 @@ Code:
   
     Player Assets:
       
-        Player.py - Contains code for the Player class. Contains simple driver code that can be used to test it. 
+        Player.py - Contains code for the Player class.
         
+        Setup.py - a "skeleton script" that contains basic code for setting up a display in pygame. 
+          
+            V 1.0 - Designed to instantiate a player object, and handle player movement.
+        
+        Player_Demo.py - A simple script that allows you to test the player class.
   
 Profile and Requirements:
 
