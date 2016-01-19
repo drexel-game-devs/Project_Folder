@@ -3,7 +3,7 @@
 So this is the General Project Folder.
 This will contain all assets, art, code, etc. 
 
-Please make sure to put relevant files inside their relevant folders (i.e art goes in Art folder, code in Code etc.)
+Please make sure to put relevant files inside their relevant folders. Please make sure to create new subdirectories inside of existing directories to keep things organized, and try to maintain the format of the README below. Thanks -- Fry
 
 Code:
   
