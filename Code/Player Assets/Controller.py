@@ -14,33 +14,39 @@ class Controller(object):
         self.x_change = 0
         self.y_change = 0
 
-    #Determine how to move the player
-    for event in pygame.event.get():
+    def update(self, player, x_change, y_change, event):
 
         #Handle Key Downs
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
-                x_change = -5
+                self.x_change = -5
             if event.key == pygame.K_d:
-                x_change = 5
+                self.x_change = 5
             if event.key == pygame.K_w:
-                y_change = -10
+                self.y_change = -10
             if event.key == pygame.K_s:
-                y_change = 10
+                self.y_change = 10
+
+            #call update method from player
+            player.update(x_change, y_change) 
+
 
         #Handle Key Ups
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_a:
-                x_change = 0
+                self.x_change = 0
             if event.key == pygame.K_d:
-                x_change = 0
+                self.x_change = 0
             if event.key == pygame.K_w:
-                y_change = 0
+                self.y_change = 0
             if event.key == pygame.K_s:
-                y_change = 0
+                self.y_change = 0
+
+            #Call update method from player
+            player.update(x_change, y_change)
 
     #Update the player class
     def updatePlayer(self, player):
 
         #Call the update method of the player class
-        player.update(x_change, y_change)
+        player.update(self.x_change, self.y_change)
