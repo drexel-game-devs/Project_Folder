@@ -1,5 +1,4 @@
 ﻿import pygame, time
-from pygame.locals import *
 
 #set the width and height
 display_width = 800
@@ -28,28 +27,12 @@ class Player(pygame.sprite.Sprite):
         #init object attributes
         self.x = x
         self.y = y
-        self.playerImage = pygame.image.load(image).convert()
-        self.rect = self.playerImage.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.area = gameDisplay.get_rect()
+        self.image = image
 
     #update will update the players position on the screen
     def update(self, x_change, y_change):
-    #change position according to velocity values if the new position is within the screen.
-        newpos = self.rect.move(x_change, 0)
-        if self.area.contains(newpos):
-            self.x += x_change
-        newpos = self.rect.move(0, y_change)
-        if self.area.contains(newpos):
-            self.y += y_change
-        #rect should always be at x,y (undoes the move above if movement failed).
-        self.rect.x = self.x
-        self.rect.y = self.y
-        
 
-        """#This structure determines what function to call
-	#Function called depends on value of the x_change/y_change variables.
+        #Determine what function to call.
         if x_change < 0:
             self.move_left(x_change)
         if x_change > 0:
@@ -57,15 +40,16 @@ class Player(pygame.sprite.Sprite):
         if y_change > 0:
             self.move_down(y_change)
         if y_change < 0:
-            self.jump(y_change)"""
+            self.jump(y_change)
 
     #draw method draws the player to the screen
     #Method needs a reference to the game screen to function
     #The convert method simply speeds up the blitting process
     def draw(self, display):
-        display.blit(self.playerImage, (player.x, player.y))
+        playerImage = pygame.image.load(self.image).convert()
+        display.blit(playerImage, (player.x, player.y))
 
-    """#move_left function moves the player 5 pixels to the left
+    #move_left function moves the player 5 pixels to the left
     def move_left(self, x_change):
         self.x += x_change
 
@@ -80,7 +64,69 @@ class Player(pygame.sprite.Sprite):
 
     #jump function allows player to jump 10 pixels up
     def jump(self, y_change):
-        self.y += y_change"""
+        self.y += y_change
+
+
+#Controller class for character movement
+class Controller(object):
+
+    #constructor accept a player object for now
+    def __init__(self, x_change, y_change):
+
+        #init the x_change and y_change
+        self.x_change = x_change
+        self.y_change = y_change
+
+        #Give the vars 0
+        self.x_change = 0
+        self.y_change = 0
+
+    def update(self, player, x_change, y_change, event):
+
+        #Handle Key Downs
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_a:
+                self.x_change = -5
+            if event.key == pygame.K_d:
+                self.x_change = 5
+            if event.key == pygame.K_w:
+                self.y_change = -10
+            if event.key == pygame.K_s:
+                self.y_change = 10
+
+            #call update method from player
+            player.update(x_change, y_change) 
+
+
+        #Handle Key Ups
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_a:
+                self.x_change = 0
+            if event.key == pygame.K_d:
+                self.x_change = 0
+            if event.key == pygame.K_w:
+                self.y_change = 0
+            if event.key == pygame.K_s:
+                self.y_change = 0
+
+            #Call update method from player
+            player.update(x_change, y_change)
+
+    #Update the player class
+    def updatePlayer(self, player):
+
+        #Call the update method of the player class
+        player.update(self.x_change, self.y_change)
+
+
+
+
+        
+
+
+
+
+
 
 
 
@@ -92,6 +138,12 @@ player = Player(300, 300, 'player.png')
 x_change = 0
 y_change = 0
 
+#Create new controller
+controller = Controller(x_change, y_change)
+
+#init a controller
+#controller = Controller(x_change, y_change)
+
 #loop control variable
 crashed = False
 
@@ -100,49 +152,18 @@ while not crashed:
 
     #Event Handler
     for event in pygame.event.get():
-
+        
         #Exit if quit
         if event.type == pygame.QUIT:
             crashed = True
-        #reset velocity values (in case no key is pressed).
-        x_change = 0
-        y_change = 0
-        #If a key is pressed, set velocity accordingly.  Opposite keys negate each other.
-        if pygame.key.get_pressed()[pygame.K_a]:
-            x_change -= 5
-        if pygame.key.get_pressed()[pygame.K_d]:
-            x_change += 5
-        if pygame.key.get_pressed()[pygame.K_w]:
-            y_change -= 10
-        if pygame.key.get_pressed()[pygame.K_s]:
-            y_change += 10
-            
-        """#Handle key pressing
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                x_change = -5
-            if event.key == pygame.K_d:
-                x_change = 5
-            if event.key == pygame.K_w:
-                y_change = -10
-            if event.key == pygame.K_s:
-                y_change = 10
 
-        #Handle key release
-        #This resets our change variables to 0
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_a:
-                x_change = 0
-            if event.key == pygame.K_d:
-                x_change = 0
-            if event.key == pygame.K_w:
-                y_change = 0
-            if event.key == pygame.K_s:
-                y_change = 0"""
+        #update the player using the controller
+        controller.update(player, x_change,y_change, event)
         
     #update the display
     gameDisplay.fill(white)
     player.update(x_change, y_change)
+    controller.updatePlayer(player)
     player.draw(gameDisplay)
     pygame.display.update()
     clock.tick(30)     
