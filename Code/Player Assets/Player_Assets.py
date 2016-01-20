@@ -56,6 +56,13 @@ class Player(pygame.sprite.Sprite):
     def jump(self, y_change):
         self.y += y_change
 
+    #Getters
+    def getX():
+        return self.x
+
+    def getY():
+        return self.y
+
 
 #Controller class for character movement
 class Controller(object):
