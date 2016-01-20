@@ -1,4 +1,5 @@
 ﻿import pygame, time
+from pygame.locals import *
 
 #set the width and height
 display_width = 800
@@ -27,13 +28,25 @@ class Player(pygame.sprite.Sprite):
         #init object attributes
         self.x = x
         self.y = y
-        self.image = image
+        self.playerImage = pygame.image.load(image).convert()
+        self.rect = self.playerImage.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.area = gameDisplay.get_rect()
 
     #update will update the players position on the screen
     def update(self, x_change, y_change):
-        #change position according to velocity values.
-        self.x += x_change
-        self.y += y_change
+    #change position according to velocity values if the new position is within the screen.
+        newpos = self.rect.move(x_change, 0)
+        if self.area.contains(newpos):
+            self.x += x_change
+        newpos = self.rect.move(0, y_change)
+        if self.area.contains(newpos):
+            self.y += y_change
+        #rect should always be at x,y (undoes the move above if movement failed).
+        self.rect.x = self.x
+        self.rect.y = self.y
+        
 
         """#This structure determines what function to call
 	#Function called depends on value of the x_change/y_change variables.
@@ -50,8 +63,7 @@ class Player(pygame.sprite.Sprite):
     #Method needs a reference to the game screen to function
     #The convert method simply speeds up the blitting process
     def draw(self, display):
-        playerImage = pygame.image.load(self.image).convert()
-        display.blit(playerImage, (player.x, player.y))
+        display.blit(self.playerImage, (player.x, player.y))
 
     """#move_left function moves the player 5 pixels to the left
     def move_left(self, x_change):
