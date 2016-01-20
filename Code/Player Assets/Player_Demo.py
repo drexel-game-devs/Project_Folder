@@ -31,8 +31,11 @@ class Player(pygame.sprite.Sprite):
 
     #update will update the players position on the screen
     def update(self, x_change, y_change):
-        
-	#This structure determines what function to call
+        #change position according to velocity values.
+        self.x += x_change
+        self.y += y_change
+
+        """#This structure determines what function to call
 	#Function called depends on value of the x_change/y_change variables.
         if x_change < 0:
             self.move_left(x_change)
@@ -41,7 +44,7 @@ class Player(pygame.sprite.Sprite):
         if y_change > 0:
             self.move_down(y_change)
         if y_change < 0:
-            self.jump(y_change)
+            self.jump(y_change)"""
 
     #draw method draws the player to the screen
     #Method needs a reference to the game screen to function
@@ -50,7 +53,7 @@ class Player(pygame.sprite.Sprite):
         playerImage = pygame.image.load(self.image).convert()
         display.blit(playerImage, (player.x, player.y))
 
-    #move_left function moves the player 5 pixels to the left
+    """#move_left function moves the player 5 pixels to the left
     def move_left(self, x_change):
         self.x += x_change
 
@@ -65,7 +68,7 @@ class Player(pygame.sprite.Sprite):
 
     #jump function allows player to jump 10 pixels up
     def jump(self, y_change):
-        self.y += y_change
+        self.y += y_change"""
 
 
 
@@ -89,8 +92,20 @@ while not crashed:
         #Exit if quit
         if event.type == pygame.QUIT:
             crashed = True
-        
-        #Handle key pressing
+        #reset velocity values (in case no key is pressed).
+        x_change = 0
+        y_change = 0
+        #If a key is pressed, set velocity accordingly.  Opposite keys negate each other.
+        if pygame.key.get_pressed()[pygame.K_a]:
+            x_change -= 5
+        if pygame.key.get_pressed()[pygame.K_d]:
+            x_change += 5
+        if pygame.key.get_pressed()[pygame.K_w]:
+            y_change -= 10
+        if pygame.key.get_pressed()[pygame.K_s]:
+            y_change += 10
+            
+        """#Handle key pressing
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
                 x_change = -5
@@ -111,7 +126,7 @@ while not crashed:
             if event.key == pygame.K_w:
                 y_change = 0
             if event.key == pygame.K_s:
-                y_change = 0
+                y_change = 0"""
         
     #update the display
     gameDisplay.fill(white)
