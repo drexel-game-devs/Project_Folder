@@ -4,8 +4,11 @@ from Player_Assets import *
 #init pygame
 pygame.init()
 
+#White background
+white = (255, 255, 255)
+
 #load the game display to fullscreen, start the clock
-gameDisplay = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+gameDisplay = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption('Test')
 clock = pygame.time.Clock()
 
@@ -22,7 +25,7 @@ controller = Controller(x_change, y_change)
 #loop control variable
 crashed = False
 
-pygame.draw.rect(gameDisplay, black, (500, 500, 400, 400))
+#pygame.draw.rect(gameDisplay, black, (500, 500, 400, 400))
 
 #Game Loop Controller
 while not crashed:

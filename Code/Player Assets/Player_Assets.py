@@ -33,25 +33,21 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
-    """#draw method draws the player to the screen
+    #draw method draws the player to the screen
     #Method needs a reference to the game screen to function
     #The convert method simply speeds up the blitting process
     def draw(self, display):
         display.blit(self.image, (self.x, self.y))
-
-    #move_left function moves the player 5 pixels to the left
+    """#move_left function moves the player 5 pixels to the left
     def move_left(self, x_change):
         self.x += x_change
-
     #move_right function moves the player 5 pixels to the right
     def move_right(self, x_change):
         self.x += x_change
-
     #move_down function moves the player down 5 pixels
     #NOTE: This will be a test function. Will most likely be deleted later.
     def move_down(self, y_change):
         self.y += y_change
-
     #jump function allows player to jump 10 pixels up
     def jump(self, y_change):
         self.y += y_change"""
@@ -89,9 +85,9 @@ class Controller(object):
         if keys[pygame.K_d]:
             self.x_change = 5
         if keys[pygame.K_w]:
-            self.x_change = -10
+            self.y_change = -10
         if keys[pygame.K_s]:
-            self.x_change = 10
+            self.y_change = 10
 
         #Handles running while using shift
         if keys[pygame.K_LSHIFT] and keys[pygame.K_d]:
