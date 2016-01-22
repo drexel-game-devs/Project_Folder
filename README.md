@@ -10,7 +10,7 @@ Code:
   
     Player Assets:
       
-        Player.py - Contains code for the Player class.
+        Player_Assets.py - contains the Player and Controller Classes. Player class now accounts for boundaries
         
         Setup.py - a "skeleton script" that contains basic code for setting up a display in pygame. 
           
