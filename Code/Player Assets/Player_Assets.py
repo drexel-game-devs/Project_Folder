@@ -33,7 +33,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
-    #draw method draws the player to the screen
+    """#draw method draws the player to the screen
     #Method needs a reference to the game screen to function
     #The convert method simply speeds up the blitting process
     def draw(self, display):
@@ -54,7 +54,7 @@ class Player(pygame.sprite.Sprite):
 
     #jump function allows player to jump 10 pixels up
     def jump(self, y_change):
-        self.y += y_change
+        self.y += y_change"""
 
     #Getters
     def getX():
@@ -80,19 +80,28 @@ class Controller(object):
 
     def update(self, player, x_change, y_change, event):
 
-        #Handle Key Downs
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                self.x_change = -5
-            if event.key == pygame.K_d:
-                self.x_change = 5
-            if event.key == pygame.K_w:
-                self.y_change = -10
-            if event.key == pygame.K_s:
-                self.y_change = 10
+        #Store Keys in variable
+        keys = pygame.key.get_pressed()
 
-            #call update method from player
-            player.update(x_change, y_change) 
+        #Handle changes
+        if keys[pygame.K_a]:
+            self.x_change = -5
+        if keys[pygame.K_d]:
+            self.x_change = 5
+        if keys[pygame.K_w]:
+            self.x_change = -10
+        if keys[pygame.K_s]:
+            self.x_change = 10
+
+        #Handles running while using shift
+        if keys[pygame.K_LSHIFT] and keys[pygame.K_d]:
+            self.x_change = 10
+        if keys[pygame.K_LSHIFT] and keys[pygame.K_a]:
+            self.x_change = -10
+
+           
+        #call update method from player
+        player.update(x_change, y_change) 
 
         #Handle Key Ups
         if event.type == pygame.KEYUP:
