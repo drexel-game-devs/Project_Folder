@@ -4,10 +4,6 @@ from Player_Assets import *
 #init pygame
 pygame.init()
 
-#create reference to white screen
-white = (255, 255, 255)
-black = (0, 0, 255)
-
 #load the game display to fullscreen, start the clock
 gameDisplay = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 pygame.display.set_caption('Test')
