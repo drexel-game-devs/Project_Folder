@@ -28,6 +28,6 @@ Profile and Requirements:
 
 Labs:
 
-    L1 -
-    L2 - 
+    L1 - Team Profile.
+    L2 - Gant Chart and Requirements Document.
     
