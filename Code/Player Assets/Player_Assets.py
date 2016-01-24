@@ -38,23 +38,19 @@ class Player(pygame.sprite.Sprite):
     #The convert method simply speeds up the blitting process
     def draw(self, display):
         display.blit(self.image, (self.x, self.y))
-
-    #move_left function moves the player 5 pixels to the left
+    """#move_left function moves the player 5 pixels to the left
     def move_left(self, x_change):
         self.x += x_change
-
     #move_right function moves the player 5 pixels to the right
     def move_right(self, x_change):
         self.x += x_change
-
     #move_down function moves the player down 5 pixels
     #NOTE: This will be a test function. Will most likely be deleted later.
     def move_down(self, y_change):
         self.y += y_change
-
     #jump function allows player to jump 10 pixels up
     def jump(self, y_change):
-        self.y += y_change
+        self.y += y_change"""
 
     #Getters
     def getX():
@@ -80,19 +76,28 @@ class Controller(object):
 
     def update(self, player, x_change, y_change, event):
 
-        #Handle Key Downs
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                self.x_change = -5
-            if event.key == pygame.K_d:
-                self.x_change = 5
-            if event.key == pygame.K_w:
-                self.y_change = -10
-            if event.key == pygame.K_s:
-                self.y_change = 10
+        #Store Keys in variable
+        keys = pygame.key.get_pressed()
 
-            #call update method from player
-            player.update(x_change, y_change) 
+        #Handle changes
+        if keys[pygame.K_a]:
+            self.x_change = -5
+        if keys[pygame.K_d]:
+            self.x_change = 5
+        if keys[pygame.K_w]:
+            self.y_change = -10
+        if keys[pygame.K_s]:
+            self.y_change = 10
+
+        #Handles running while using shift
+        if keys[pygame.K_LSHIFT] and keys[pygame.K_d]:
+            self.x_change = 10
+        if keys[pygame.K_LSHIFT] and keys[pygame.K_a]:
+            self.x_change = -10
+
+           
+        #call update method from player
+        player.update(x_change, y_change) 
 
         #Handle Key Ups
         if event.type == pygame.KEYUP:

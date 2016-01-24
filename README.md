@@ -10,7 +10,7 @@ Code:
   
     Player Assets:
       
-        Player.py - Contains code for the Player class.
+        Player_Assets.py - contains the Player and Controller Classes. Player class now accounts for boundaries
         
         Setup.py - a "skeleton script" that contains basic code for setting up a display in pygame. 
           
@@ -25,5 +25,9 @@ Profile and Requirements:
     Pygame Install Instructions - instructions for downloading and configuring pygame 3.2 for your computer
     
     Requirements - Text file that lays out the basic functional requirements of our project.
-    
+
+Labs:
+
+    L1 - Team Profile.
+    L2 - Gant Chart and Requirements Document.
     
