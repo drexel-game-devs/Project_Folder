@@ -46,7 +46,7 @@ class Player(pygame.sprite.Sprite):
         #TODO: Add shift to sprint.
         #Player must slow down if no keys are pressed.
         if not (keys[pygame.K_a] or keys[pygame.K_d]):
-            if (-self.accelx < self.dx , self.accelx): #Set to zero if below a threshold to avoid jittering.
+            if (-self.accelx < self.dx < self.accelx): #Set to zero if below a threshold to avoid jittering.
                  self.dx = 0
             elif self.dx > 0:
                 self.dx -= self.decelx

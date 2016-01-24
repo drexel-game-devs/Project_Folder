@@ -9,7 +9,7 @@ pygame.init()
 white = (255, 255, 255)
 
 #load the game display to fullscreen, start the clock
-gameDisplay = pygame.display.set_mode((800, 1200))
+gameDisplay = pygame.display.set_mode((800, 600)) #<----- 1200 is too tall for even a 1080p monitor (the first one is actually width).
 pygame.display.set_caption('Test')
 clock = pygame.time.Clock()
 
@@ -48,12 +48,12 @@ while not crashed:
     for o in visible.sprites():
         o.update()
 
-
     #Apply gravity <----- this should happen in the update event of each object that is affected by gravity. TODO.
     #physics.gravity(player, 7, 500)
         
     #update the display
     gameDisplay.fill(white)
+    #draw all visible sprites.
     for o in visible.sprites():
         o.draw(gameDisplay)
     pygame.display.update()
