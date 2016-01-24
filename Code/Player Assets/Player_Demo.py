@@ -1,5 +1,6 @@
 ﻿import pygame, time
 from Player_Assets import *
+from Physics_Engine import *
 
 #init pygame
 pygame.init()
@@ -8,7 +9,7 @@ pygame.init()
 white = (255, 255, 255)
 
 #load the game display to fullscreen, start the clock
-gameDisplay = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+gameDisplay = pygame.display.set_mode((800, 1200))
 pygame.display.set_caption('Test')
 clock = pygame.time.Clock()
 
@@ -22,10 +23,11 @@ player = Player(300, 300, 'player.png', gameDisplay)
 #Create new controller
 controller = Controller(x_change, y_change)
 
+#Create reference to engine
+physics = Engine()
+
 #loop control variable
 crashed = False
-
-#pygame.draw.rect(gameDisplay, black, (500, 500, 400, 400))
 
 #Game Loop Controller
 while not crashed:
@@ -39,6 +41,10 @@ while not crashed:
 
         #update the player using the controller
         controller.update(player, x_change,y_change, event)
+
+
+    #Apply gravity
+    physics.gravity(player, 7, 500)
         
     #update the display
     gameDisplay.fill(white)
