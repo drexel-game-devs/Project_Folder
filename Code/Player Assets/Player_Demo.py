@@ -1,12 +1,21 @@
 ﻿import pygame, time
-from Player_Assets import *
-#from Physics_Engine import * TOFO: this doesn't work for a file in a separate folder.
-
 #init pygame
 pygame.init()
+from Player_Assets import *
+from Title_Screen import *
+#from Physics_Engine import
 
-#White background
+#init pygame
+
+
+#color values
+black = (0,0,0)
 white = (255, 255, 255)
+red = (200,0,0)
+green = (0,200, 0)
+bright_green = (0,255,0)
+bright_red = (255,0,0)
+
 
 #load the game display to fullscreen, start the clock
 gameDisplay = pygame.display.set_mode((800, 600)) #<----- 1200 is too tall for even a 1080p monitor (the first one is actually width).
@@ -32,9 +41,11 @@ player.add(visible) #<-----TODO: This should be in the player initializer but as
 #loop control variable
 crashed = False
 
+#run the intro screen before starting the game's main loop..
+intro(gameDisplay, clock)
+
 #Game Loop Controller
 while not crashed:
-
     #Event Handler
     for event in pygame.event.get():
         
