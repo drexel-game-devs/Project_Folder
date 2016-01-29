@@ -94,7 +94,6 @@ class Engine(object):
                 player.rect.bottom = object.rect.top
 
 
-
 #Block class for standard physical objects
 class Block(pygame.sprite.Sprite):
     
