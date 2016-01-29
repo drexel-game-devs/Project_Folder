@@ -4,7 +4,7 @@ from Player_Assets import *
 #Create group for physical entities
 entities = pygame.sprite.Group()
 
-"""#Physical Entities will be created and added to a group.
+#Physical Entities will be created and added to a group.
 #This will make it so the Physics_Engine acts on a cluster of objects.
 class Physical_Entity(pygame.sprite.Sprite):
 
@@ -39,7 +39,7 @@ class Physical_Entity(pygame.sprite.Sprite):
         self.y += y_change
 
     def setY(self, x_change):
-        self.x += x_change"""
+        self.x += x_change
 
 class Engine(object):
 
@@ -52,9 +52,71 @@ class Engine(object):
     #gravity function will take a physical entity and translate its y_coordinate
     def gravity(self, character, fall_speed, maxY):
 
-        #if the character is a player, proceed
-        if isinstance(character, Player):
+        #if the characters Y value is less than the max Y, proceed
+        if character.getY() < maxY:
+            character.setY(fall_speed)
 
-            #if the characters Y value is less than the max Y, proceed
-            if character.getY() < maxY:
-                character.setY(fall_speed)
+    #Collide dictates what happens when two characters hit each other
+    def collideLeft(self, p_object1, p_object2):
+
+        #Handle collision of two objects
+        if pygame.sprite.collide_rect(p_object1, p_object2):
+
+            #move the first object to the left
+            p_object1.move_left(20)
+
+    #Function to handle collisions
+    #Figured to put this in a function to use later.
+    def handle_collisions(self, player):
+
+        #Determine if the player has collided with anything
+        #For each object in the list, determine if the player made contact
+        hit_list = pygame.sprite.spritecollide(player, player.collide_list, False)
+        for object in hit_list:
+
+            #Handle moves to the right or left
+            if player.dx > 0:
+                player.dx = 0
+                player.rect.right = object.rect.left
+            else:
+                player.dx = 0
+                player.rect.left = object.rect.right
+
+        #Determine if the player collides with anything
+        hit_list = pygame.sprite.spritecollide(player, player.collide_list, False)
+        for object in hit_list:
+ 
+            if player.dy > 0:
+                player.dy = 0
+                self.rect.top = object.rect.bottom
+            else:
+                player.dy = 0
+                player.rect.bottom = object.rect.top
+
+
+
+#Block class for standard physical objects
+class Block(pygame.sprite.Sprite):
+    
+    #init method
+    def __init__(self, x, y, width, height):
+
+        #Call super class constructor
+        super().__init__()
+
+        #set object attributes
+        self.x = x
+        self.y = y
+        
+        #create image
+        self.image = pygame.Surface([width, height])
+        self.image.fill((0, 0, 0))
+
+        #Create rect
+        self.rect = self.image.get_rect()
+        self.rect.y = self.y
+        self.rect.x = self.x
+
+    #Draw method for this class blits the object to the screen
+    def draw(self, gameDisplay):
+        gameDisplay.blit(self.image, (self.x, self.y))
