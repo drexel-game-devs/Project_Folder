@@ -109,7 +109,7 @@ class Block(pygame.sprite.Sprite):
         
         #create image
         self.image = pygame.Surface([width, height])
-        self.image.fill((0, 0, 0))
+        self.image.fill((255, 255, 255))
 
         #Create rect
         self.rect = self.image.get_rect()

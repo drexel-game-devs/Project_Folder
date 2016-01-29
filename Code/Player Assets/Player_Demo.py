@@ -2,7 +2,7 @@
 #init pygame
 pygame.init()
 from Player_Assets import *
-#from Title_Screen import *
+from Title_Screen import *
 from Physics_Engine import *
 
 #color values
@@ -45,6 +45,9 @@ visible.add(rect)
 player = Player(300, 300, 'main_player.png', gameDisplay, visible)
 player.collide_list = block_list
 
+#call title screen
+intro(gameDisplay, clock)
+
 #Game Loop 
 while not crashed:
     #Event Handler
@@ -58,7 +61,7 @@ while not crashed:
     visible.update()
     
     #update the display
-    gameDisplay.fill(white)
+    gameDisplay.fill(black)
 
     #draw all visible sprites.
     visible.draw(gameDisplay)
