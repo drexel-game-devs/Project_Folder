@@ -18,6 +18,16 @@ Code:
         
         Player_Demo.py - A simple script that allows you to test the player class.
   
+Art:
+  
+    MainPlayer (images are 32 x 48 pixels):
+      
+        main_walk_x.png - main character walk cycle, where x is the number in the order of the cycle
+        
+        main_shoot_x.png - main character shooting animation, where x is the number in the order of the cycle
+
+            character's weapon arm gradually lights up to prepare to shoot
+        
 Profile and Requirements:
 
     Team Profile - contains information for various group members and what our project entails.
