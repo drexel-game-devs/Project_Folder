@@ -1,4 +1,4 @@
-import pygame
+﻿import pygame
 
 #Player class. Contains an x/y coordinate and a picture
 class Player(pygame.sprite.Sprite):
@@ -28,6 +28,8 @@ class Player(pygame.sprite.Sprite):
         self.area = gameDisplay.get_rect()
         #Must add player to visible group so it gets updated.
         #self.add(visible)
+        #added a health variable
+        self.health = 100
 
     #update will update the players position on the screen
     def update(self):
@@ -96,6 +98,8 @@ class Player(pygame.sprite.Sprite):
     def getY():
         return self.y
 
+    def getH():
+        return self.health
 
 #Controller class for character movement
 """class Controller(object):
