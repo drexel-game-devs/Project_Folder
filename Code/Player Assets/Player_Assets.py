@@ -1,10 +1,18 @@
+<<<<<<< HEAD
 ﻿import pygame
+=======
+import pygame
+from Physics_Engine import *
+
+#Create global physics reference
+physics = Engine()
+>>>>>>> origin/master
 
 #Player class. Contains an x/y coordinate and a picture
 class Player(pygame.sprite.Sprite):
 
     #initialization method
-    def __init__(self, x, y, image, gameDisplay):
+    def __init__(self, x, y, image, gameDisplay, group):
 
         #call superclass constructor
         pygame.sprite.Sprite.__init__(self)
@@ -12,24 +20,38 @@ class Player(pygame.sprite.Sprite):
         #init object attributes
         self.x = x
         self.y = y
-        self.dx = 0  #delta x and delta y, for velocities on the x and y axes, respectively.
+
+        #delta x and delta y, for velocities on the x and y axes, respectively.
+        self.dx = 0  
         self.dy = 0
-        self.maxdx = 20  #maximum velocities on x and y axes.
+
+        #maximum velocities on x and y axes.
+        self.maxdx = 20  
         self.maxdy = 20
-        self.accelx = 2 #How much to accelerate by each frame.
+
+        #How much to accelerate by each frame.
+        self.accelx = 2 
         self.accely = 2
-        self.decelx = 1 #rate of deceleration when no key is pressed.
+
+        #rate of deceleration when no key is pressed.
+        self.decelx = 1 
         self.decely = 1
-        #.inAir = true #True if the player is in the air <-----included for future use.
+
+        #load image and create a rectangle
         self.image = pygame.image.load(image).convert()
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.area = gameDisplay.get_rect()
+
         #Must add player to visible group so it gets updated.
+<<<<<<< HEAD
         #self.add(visible)
         #added a health variable
         self.health = 100
+=======
+        self.add(group)
+>>>>>>> origin/master
 
     #update will update the players position on the screen
     def update(self):
@@ -45,11 +67,12 @@ class Player(pygame.sprite.Sprite):
             self.dy -= self.accely
         if keys[pygame.K_s]:
             self.dy += self.accely
+
         #TODO: Add shift to sprint.
         #Player must slow down if no keys are pressed.
         if not (keys[pygame.K_a] or keys[pygame.K_d]):
             if (-self.accelx < self.dx < self.accelx): #Set to zero if below a threshold to avoid jittering.
-                 self.dx = 0
+                self.dx = 0
             elif self.dx > 0:
                 self.dx -= self.decelx
             elif self.dx < 0:
@@ -85,74 +108,34 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
+        #Use the physics engine to handle collisions and gravity
+        #We could end up using this method elsewhere
+        #And it cleans up the code a bit.
+        physics.handle_collisions(self)
+        physics.gravity(self, 7, 500)
+
+
+
     #draw method draws the player to the screen
     #Method needs a reference to the game screen to function
     #The convert method simply speeds up the blitting process
     def draw(self, display):
         display.blit(self.image, (self.x, self.y))
-
+        
     #Getters
-    def getX():
+    def getX(self):
         return self.x
 
-    def getY():
+    def getY(self):
         return self.y
 
+<<<<<<< HEAD
     def getH():
         return self.health
+=======
+    def setY(self, amount):
+        self.y += amount
+>>>>>>> origin/master
 
-#Controller class for character movement
-"""class Controller(object):
-
-    #constructor accept a player object for now
-    def __init__(self, x_change, y_change):
-
-        #init the x_change and y_change
-        self.x_change = x_change
-        self.y_change = y_change
-
-        #Give the vars 0
-        self.x_change = 0
-        self.y_change = 0
-
-    def update(self, player, x_change, y_change, event):
-
-        #Store Keys in variable
-        keys = pygame.key.get_pressed() #<----- this requires copying the entire array every frame, more expensive than just indexing the array
-
-        #Handle changes
-        #We add to the values instead of setting them directly so that opposite keys will cancel out.
-        if keys[pygame.K_a]:
-            self.x_change += -5
-        if keys[pygame.K_d]:
-            self.x_change += 5
-        if keys[pygame.K_w]:
-            self.y_change += -10
-        if keys[pygame.K_s]:
-            self.y_change += 10
-
-        #Handles running while using shift
-        if keys[pygame.K_LSHIFT] and keys[pygame.K_d]:
-            self.x_change = 10
-        if keys[pygame.K_LSHIFT] and keys[pygame.K_a]:
-            self.x_change = -10
-
-           
-        #call update method from player
-        player.update(x_change, y_change) 
-
-        #Handle Key Ups
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_a or event.key == pygame.K_d:
-                self.x_change = 0
-            if event.key == pygame.K_w or event.key == pygame.K_s:
-                self.y_change = 0
-
-            #Call update method from player
-            player.update(x_change, y_change)
-
-    #Update the player class
-    def updatePlayer(self, player):
-
-        #Call the update method of the player class
-        player.update(self.x_change, self.y_change)"""
+    def setX(self, amount):
+        self.x += amount
