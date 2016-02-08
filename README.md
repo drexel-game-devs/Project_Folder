@@ -27,6 +27,16 @@ Art:
         main_shoot_x.png - main character shooting animation, where x is the number in the order of the cycle
 
             character's weapon arm gradually lights up to prepare to shoot
+
+    FactoryLevel
+
+        cargox.png - cargo boxes 100 x 300 pixels
+
+        cratex.png - crates 50 x 50 pixels
+
+        factory.png - background for level 600 x 800
+
+    gifs (gifs for testing animation)
         
 Profile and Requirements:
 
