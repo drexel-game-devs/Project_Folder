@@ -37,24 +37,24 @@ class Player(pygame.sprite.Sprite):
 
         #grab all images and add them to their respective lists
         image = pygame.image.load("main_player.png").convert()
-        self.left_frames.append(image)
+        self.right_frames.append(image)
         image = pygame.image.load("main_walk_0.png").convert()
-        self.left_frames.append(image)
+        self.right_frames.append(image)
         image = pygame.image.load("main_walk_1.png").convert()
-        self.left_frames.append(image)
+        self.right_frames.append(image)
         image = pygame.image.load("main_walk_2.png").convert()
-        self.left_frames.append(image)
+        self.right_frames.append(image)
         image = pygame.image.load("main_walk_3.png").convert()
-        self.left_frames.append(image)
+        self.right_frames.append(image)
 
         #create the right frames by flipping the left frames
-        for image in range(len(self.left_frames)):
+        for image in range(len(self.right_frames)):
 
-            image = pygame.transform.flip(self.left_frames[image], True, False)
-            self.right_frames.append(image)
+            image = pygame.transform.flip(self.right_frames[image], True, False)
+            self.left_frames.append(image)
 
         #starting image is the first in left frames
-        self.image = self.left_frames[0]
+        self.image = self.right_frames[0]
  
         # Set a referance to the image rect.
         self.rect = self.image.get_rect()
@@ -78,7 +78,7 @@ class Player(pygame.sprite.Sprite):
         pos = self.rect.x
 
         #Update the image loaded
-        if self.direction == "L":
+        if self.direction == "R":
             frame = (pos // 30) % len(self.right_frames)
             self.image = self.right_frames[frame]
         else:
@@ -236,21 +236,7 @@ def main():
  
     pygame.display.set_caption("ADAM Test")
  
-    # Create the player
-    """ = 0
-    while count < 4:
-        if count == 0:
-          player = Player("main_walk_0.png")
-          count += 1
-        if count == 1:
-          player = Player("main_walk_1.png")
-          count += 1
-        if count == 2:
-          player = Player("main_walk_2.png")
-          count += 1
-        if count == 3:
-          player = Player("main_walk_3.png")
-          count = 0"""
+    # Create player
 
     player = Player()
  
@@ -294,7 +280,33 @@ def main():
                     player.stop()
                 if event.key == pygame.K_RIGHT and player.change_x > 0:
                     player.stop()
- 
+
+
+        #Apply test cases
+
+        #This code tests the players x and y coordinates in relation to various platforms
+        block_hit_list = pygame.sprite.spritecollide(player, player.level.platform_list, False)
+        for block in block_hit_list:
+
+            if player.change_x > 0:
+
+                print("Player right X assertion = "),
+                assert(player.rect.right == block.rect.left)
+
+            elif player.change_x < 0:
+
+                print("Player left X assertion = "),
+                assert(player.rect.left == block.rect.right)
+
+
+
+
+
+
+
+        
+
+
         # Update the player.
         active_sprite_list.update()
  
@@ -318,7 +330,7 @@ def main():
  
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
- 
+
     pygame.quit()
  
 if __name__ == "__main__":
