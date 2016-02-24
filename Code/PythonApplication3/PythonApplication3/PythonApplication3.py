@@ -152,7 +152,12 @@ class Player(pygame.sprite.Sprite):
     def stop(self):
         """ Called when the user lets off the keyboard. """
         self.change_x = 0
- 
+    
+    def getX(self):
+        return self.x
+    
+    def gety(self):
+        return self.y
  
 class Platform(pygame.sprite.Sprite):
     """ Platform the user can jump on """
