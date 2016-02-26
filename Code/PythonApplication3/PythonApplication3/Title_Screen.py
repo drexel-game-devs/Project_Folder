@@ -61,7 +61,7 @@ def intro(gameDisplay, clock):
         
         gameDisplay.fill(BLACK)
         
-        TextSurf, TextRect = text_objects('Low Rez Studios', largeText)
+        TextSurf, TextRect = text_objects('A.D.A.M.', largeText)
         TextRect.center = ((display_width/2), (display_height/2))
         gameDisplay.blit(TextSurf, TextRect)
         
