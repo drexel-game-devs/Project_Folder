@@ -1,9 +1,9 @@
 import pygame
 import time
-
+pygame.font.init()
 
 #loads pygame
-#pygame.init()
+pygame.init()
 
 #color values
 BLACK = (0,0,0)
@@ -24,7 +24,7 @@ smallText = pygame.font.Font('freesansbold.ttf', 20)
 #function that takes a string text and font type
 #returns textSurface with the info
 def text_objects(text, font):
-    textSurface = font.render(text, True, white)
+    textSurface = font.render(text, True, WHITE)
     return textSurface, textSurface.get_rect()
 #button function used in title screen
 def button(gameDisplay, msg, x, y, width, height, acolor, icolor):
@@ -59,16 +59,16 @@ def intro(gameDisplay, clock):
                 quit()
             
         
-        gameDisplay.fill(black)
+        gameDisplay.fill(BLACK)
         
         TextSurf, TextRect = text_objects('Low Rez Studios', largeText)
         TextRect.center = ((display_width/2), (display_height/2))
         gameDisplay.blit(TextSurf, TextRect)
         
-        if button(gameDisplay, "START", 150,450,100,50,bright_green, green):
+        if button(gameDisplay, "START", 150,450,100,50,BRIGHT_GREEN, GREEN):
             intro = False
           
-        if button(gameDisplay, "QUIT", 550,450,100,50, bright_red, red,):
+        if button(gameDisplay, "QUIT", 550,450,100,50, BRIGHT_RED, RED):
             pygame.quit()
         
 

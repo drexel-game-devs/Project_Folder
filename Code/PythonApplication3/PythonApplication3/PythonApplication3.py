@@ -1,15 +1,20 @@
 ﻿import pygame
+
+from Title_Screen import *
  
 # Global constants
  
 # Colors
-BLACK = (0, 0, 0)
+BLACK = (0,0,0)
 WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
+GREEN = (0,255,0)
+
  
 # Screen dimensions
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
+
+
  
  
 class Player(pygame.sprite.Sprite):
@@ -265,7 +270,8 @@ def main():
  
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
- 
+    #call title screen
+    intro(screen, clock) 
     # -------- Main Program Loop -----------
     while not done:
         for event in pygame.event.get():
