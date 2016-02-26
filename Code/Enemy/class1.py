@@ -121,13 +121,14 @@ class mob(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0          
         else:
-            self.change_x = -5.8
+            self.change_x = -5
             self.direction = 'L'
     def moveright(self):
         if self.rect.right > SCREEN_WIDTH:
             self.rect.right = SCREEN_WIDTH       
         else:
-            self.change_x = 5.8
+
+            self.change_x = 5
             self.direction = 'R'
 
     def stop(self):
@@ -135,43 +136,40 @@ class mob(pygame.sprite.Sprite):
     def spawn(self,display):
         display.blit(self.image,(self.rect.x,self.rect.y))
 
-    def follow(self, player, jumpl):
-        if(player.rect.x > self.rect.x and player.rect.y < self.rect.y):
-            if self.change_x == 0:
+    def follow(self, player, jumpl, counter):
+        if self.rect.x in range(jumpl, jumpl + 15):
+            if self.direction == 'L':
+                self.jump()
+                self.moveleft()
+            elif self.direction == 'R':
                 self.jump()
                 self.moveright()
-            print( 'Enemy' +str(self.rect.x))                   
-            if self.rect.x == jumpl:
+                #self.stop()
+        elif player.rect.x > self.rect.x:
+            self.moveright()
+            self.direction = 'R'
+        elif player.rect.x < self.rect.x:
+            self.moveleft()
+            self.direction = 'L'
+        elif player.rect.x == player.rect.x:
+            self.stop()
+        elif player.rect.x > self.rect.x and player.rect.y < self.rect.y:
+            if self.rect.x in range(jumpl - 10, jumpl + 15):
                 self.jump()
                 self.moveright()
                 self.direction = 'R'
-            else:
-                self.moveright()
-        elif(player.rect.x > self.rect.x and player.rect.y == self.rect.y):
-            self.moveright()
-            self.direction = 'R'
-        elif(player.rect.x > self.rect.x and player.rect.y > self.rect.y):
-            self.moveright()
-            self.direction = 'R'
-        
-        elif(player.rect.x < self.rect.x and player.rect.y < self.rect.y):
-            print( 'Enemy' +str(self.rect.x))                   
-            if self.rect.x == jumpl:
+        elif player.rect.x < self.rect.x and player.rect.y < self.rect.y:
+            print('In if statement')
+            if self.rect.x in range(jumpl + 10, jumpl - 15):
+                print('Enemy x' + str(self.rect.x))
                 self.jump()
                 self.moveleft()
                 self.direction = 'L'
-            else:
-                self.moveleft()
-                self.direction = 'L'
-        elif(player.rect.x < self.rect.x and player.rect.y == self.rect.y):
-            self.moveleft()
-            self.direction = 'L'
-        elif(player.rect.x < self.rect.x and player.rect.y > self.rect.y):
-            self.moveleft()
-            self.direction = 'L'
-        else:
+   
+        elif player.rect.x == self.rect.x and player.rect.y < self.rect.y:
             self.stop()
-
+        print(str(self.rect.x) + ' + ' + str(self.change_x))
+        
     def sight(self, gameDisplay):
         #pygame.draw.rect(screen, color, (x,y,width,height), thickness)     
         pygame.draw.rect(gameDisplay, red_c, (self.rect.x, self.rect.y, 300, 50), 0)
