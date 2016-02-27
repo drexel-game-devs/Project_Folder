@@ -42,15 +42,15 @@ class Player(pygame.sprite.Sprite):
         self.right_frames = []
 
         #grab all images and add them to their respective lists
-        image = pygame.image.load("main_player.png").convert()
+        image = pygame.image.load("main_player.png")
         self.right_frames.append(image)
-        image = pygame.image.load("main_walk_0.png").convert()
+        image = pygame.image.load("main_walk_0.png")
         self.right_frames.append(image)
-        image = pygame.image.load("main_walk_1.png").convert()
+        image = pygame.image.load("main_walk_1.png")
         self.right_frames.append(image)
-        image = pygame.image.load("main_walk_2.png").convert()
+        image = pygame.image.load("main_walk_2.png")
         self.right_frames.append(image)
-        image = pygame.image.load("main_walk_3.png").convert()
+        image = pygame.image.load("main_walk_3.png")
         self.right_frames.append(image)
 
         #create the right frames by flipping the left frames
@@ -217,7 +217,7 @@ class Level(object):
         """ Draw everything on this level. """
  
         # Draw the background
-        screen.fill(BLACK)
+        screen.fill(WHITE)
  
         # Draw all the sprite lists that we have
         self.platform_list.draw(screen)
