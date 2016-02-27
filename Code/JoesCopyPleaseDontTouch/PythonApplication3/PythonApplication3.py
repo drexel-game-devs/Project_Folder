@@ -2,7 +2,7 @@
 import random
 
 # Global constants
- 
+
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -170,13 +170,20 @@ class Platform(pygame.sprite.Sprite):
         super().__init__()
 
         if integer == 1:
-            self.image = pygame.image.load("cargo1.png")
-        elif integer == 2:
             self.image = pygame.image.load("crate1.png")
-        elif integer == 3:
+        elif integer == 2:
             self.image = pygame.image.load("crate2.png")
-        elif integer == 4:
+        elif integer == 3:
             self.image = pygame.image.load("crate3.png")
+        elif integer == 4:
+            self.image = pygame.image.load("cargo1.png")
+        elif integer == 5:
+            self.image = pygame.image.load("cargo2.png")
+        elif integer == 6:
+            self.image = pygame.image.load("cargo3.png")
+        elif integer == 7:
+            self.image = pygame.image.load("cargo4.png")
+
         self.rect = self.image.get_rect()
  
  
@@ -206,9 +213,11 @@ class Level(object):
  
         # Draw the background
         screen.fill(BLACK)
+        
  
         # Draw all the sprite lists that we have
         self.platform_list.draw(screen)
+        
         self.enemy_list.draw(screen)
  
  
@@ -218,30 +227,44 @@ class Level_01(Level):
  
     def __init__(self, player):
         """ Create level 1. """
-        numGen = random.randint(1,2)
+        numGen = random.randint(1,3)
 
         # Call the parent constructor
         Level.__init__(self, player)
+
+        self.background = pygame.image.load("factory.png").convert()
+        
 
  
         # Array with width, height, x, and y of platform
         if numGen == 1:
             # Boxes number top to bottom, left to right
             level = [
-                    [300, 100, 3, 600, 450],# Box #1
-                    [300, 100, 4, 700, 450],# Box #2
-                    [50, 50, 2, 450, 550], # Box #3
-                    [300, 100, 1, 500, 500],# Box #4
+                    [50, 50, 2, 600, 450],# Cargo #1
+                    [50, 50, 1, 700, 450],# Cargo #2
+                    [300, 100, 4, 500, 500], # Crate #1
+                    [50, 50, 1, 450, 550] # Cargo #3
                     ]
+
         elif numGen == 2:
             # Boxes number top to bottom, left to right
             level = [[50, 50, 2, 250, 500],# Box #1
-                     [50, 50, 4, 350, 500],# Box #2
+                     [50, 50, 1, 350, 500],# Box #2
                      [50, 50, 2, 150, 550],# Box #3
-                     [50, 50, 3, 250, 550],# Box #4
+                     [50, 50, 1, 250, 550],# Box #4
                      [50, 50, 2, 300, 550],# Box #5
                      [50, 50, 3, 350, 550],# Box #6
                      [50, 50, 3, 450, 550]# Box #7
+                    ]
+        elif numGen == 3:
+            # Boxes number top to bottom, left to right
+            level = [
+                     [50, 50, 2, 600, 450], # Box #1
+                     [100, 300, 4, 650, 400],# Cargo #1
+                     [50, 50, 1, 250, 550], # Box #2
+                     [50, 50, 1, 350, 550], # Box #3
+                     [50, 50, 1, 450, 550], # Box #4
+                     [100, 300, 5, 500, 500]# Cargo #2
                     ]
  
         # Go through the array above and add platforms

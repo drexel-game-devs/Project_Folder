@@ -1,4 +1,5 @@
 ﻿import pygame
+import random
 
 from Title_Screen import *
  
@@ -167,15 +168,27 @@ class Player(pygame.sprite.Sprite):
 class Platform(pygame.sprite.Sprite):
     """ Platform the user can jump on """
  
-    def __init__(self, width, height):
+    def __init__(self, width, height, integer):
         """ Platform constructor. Assumes constructed with user passing in
             an array of 5 numbers like what's defined at the top of this
             code. """
         super().__init__()
  
-        self.image = pygame.Surface([width, height])
-        self.image.fill(WHITE)
- 
+        if integer == 1:
+            self.image = pygame.image.load("crate1.png")
+        elif integer == 2:
+            self.image = pygame.image.load("crate2.png")
+        elif integer == 3:
+            self.image = pygame.image.load("crate3.png")
+        elif integer == 4:
+            self.image = pygame.image.load("cargo1.png")
+        elif integer == 5:
+            self.image = pygame.image.load("cargo2.png")
+        elif integer == 6:
+            self.image = pygame.image.load("cargo3.png")
+        elif integer == 7:
+            self.image = pygame.image.load("cargo4.png")
+
         self.rect = self.image.get_rect()
  
  
@@ -217,21 +230,48 @@ class Level_01(Level):
  
     def __init__(self, player):
         """ Create level 1. """
- 
+        numGen = random.randint(1,3)
+
         # Call the parent constructor
         Level.__init__(self, player)
  
         # Array with width, height, x, and y of platform
-        level = [[210, 70, 500, 500],
-                 [210, 70, 200, 400],
-                 [210, 70, 600, 300],
-                 ]
+        if numGen == 1:
+            # Boxes number top to bottom, left to right
+            level = [
+                    [50, 50, 2, 600, 450],# Cargo #1
+                    [50, 50, 1, 700, 450],# Cargo #2
+                    [300, 100, 4, 500, 500], # Crate #1
+                    [50, 50, 1, 450, 550] # Cargo #3
+                    ]
+
+        elif numGen == 2:
+            # Boxes number top to bottom, left to right
+            level = [[50, 50, 2, 250, 500],# Box #1
+                     [50, 50, 1, 350, 500],# Box #2
+                     [50, 50, 2, 150, 550],# Box #3
+                     [50, 50, 1, 250, 550],# Box #4
+                     [50, 50, 2, 300, 550],# Box #5
+                     [50, 50, 3, 350, 550],# Box #6
+                     [50, 50, 3, 450, 550]# Box #7
+                    ]
+
+        elif numGen == 3:
+            # Boxes number top to bottom, left to right
+            level = [
+                     [50, 50, 2, 600, 450], # Box #1
+                     [100, 300, 4, 650, 400],# Cargo #1
+                     [50, 50, 1, 250, 550], # Box #2
+                     [50, 50, 1, 350, 550], # Box #3
+                     [50, 50, 1, 450, 550], # Box #4
+                     [100, 300, 5, 500, 500]# Cargo #2
+                    ]
  
         # Go through the array above and add platforms
         for platform in level:
-            block = Platform(platform[0], platform[1])
-            block.rect.x = platform[2]
-            block.rect.y = platform[3]
+            block = Platform(platform[0], platform[1], platform[2])
+            block.rect.x = platform[3]
+            block.rect.y = platform[4]
             block.player = self.player
             self.platform_list.add(block)
  
@@ -261,7 +301,7 @@ def main():
     active_sprite_list = pygame.sprite.Group()
     player.level = current_level
  
-    player.rect.x = 340
+    player.rect.x = 0
     player.rect.y = SCREEN_HEIGHT - player.rect.height
     active_sprite_list.add(player)
  
