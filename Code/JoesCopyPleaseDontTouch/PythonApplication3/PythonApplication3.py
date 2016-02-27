@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
         self.right_frames = []
 
         #grab all images and add them to their respective lists
-        image = pygame.image.load("main_player.png").convert()
+        image = pygame.image.load("main_player.png")
         self.right_frames.append(image)
         image = pygame.image.load("main_walk_0.png").convert()
         self.right_frames.append(image)
@@ -200,7 +200,7 @@ class Level(object):
         self.player = player
          
         # Background image
-        self.background = None
+        self.background = pygame.image.load("factory.png").convert()
        
     # Update everythign on this level
     def update(self):
@@ -212,7 +212,7 @@ class Level(object):
         """ Draw everything on this level. """
  
         # Draw the background
-        screen.fill(BLACK)
+        screen.fill(WHITE)
         
  
         # Draw all the sprite lists that we have
