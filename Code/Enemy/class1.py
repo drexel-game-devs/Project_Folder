@@ -4,6 +4,7 @@ from PythonApplication8 import Player
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 red_c = (255,0,0)
+tempspeed = 3.5
 
 class mob(pygame.sprite.Sprite):
     """description of class"""
@@ -26,15 +27,15 @@ class mob(pygame.sprite.Sprite):
         self.right_frames = []
 
         #grab all images and add them to their respective lists
-        image = pygame.image.load("main_player.png").convert()
+        image = pygame.image.load("main_player.png")
         self.left_frames.append(image)
-        image = pygame.image.load("main_walk_0.png").convert()
+        image = pygame.image.load("main_walk_0.png")
         self.left_frames.append(image)
-        image = pygame.image.load("main_walk_1.png").convert()
+        image = pygame.image.load("main_walk_1.png")
         self.left_frames.append(image)
-        image = pygame.image.load("main_walk_2.png").convert()
+        image = pygame.image.load("main_walk_2.png")
         self.left_frames.append(image)
-        image = pygame.image.load("main_walk_3.png").convert()
+        image = pygame.image.load("main_walk_3.png")
         self.left_frames.append(image)
 
         #create the right frames by flipping the left frames
@@ -106,7 +107,7 @@ class mob(pygame.sprite.Sprite):
         if self.change_y == 0:
             self.change_y = 1
         else:
-            self.change_y += .34
+            self.change_y += .50
         if self.rect.y >= SCREEN_HEIGHT - self.rect.height and self.change_y >= 0:
             self.change_y = 0
             self.rect.y = SCREEN_HEIGHT - self.rect.height
@@ -121,84 +122,116 @@ class mob(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0          
         else:
-            self.change_x = -5
+            self.change_x = -3
             self.direction = 'L'
     def moveright(self):
         if self.rect.right > SCREEN_WIDTH:
             self.rect.right = SCREEN_WIDTH       
         else:
 
-            self.change_x = 5
+            self.change_x = 3
             self.direction = 'R'
 
     def stop(self):
         self.change_x = 0
     def spawn(self,display):
         display.blit(self.image,(self.rect.x,self.rect.y))
-
-    def follow(self, player, jumpl, counter):
-        if self.rect.x in range(jumpl, jumpl + 15):
-            if self.direction == 'L':
-                self.jump()
-                self.moveleft()
-            elif self.direction == 'R':
-                self.jump()
-                self.moveright()
-                #self.stop()
-        elif player.rect.x > self.rect.x:
-            self.moveright()
-            self.direction = 'R'
-        elif player.rect.x < self.rect.x:
-            self.moveleft()
-            self.direction = 'L'
-        elif player.rect.x == player.rect.x:
-            self.stop()
-        elif player.rect.x > self.rect.x and player.rect.y < self.rect.y:
-            if self.rect.x in range(jumpl - 10, jumpl + 15):
-                self.jump()
-                self.moveright()
-                self.direction = 'R'
-        elif player.rect.x < self.rect.x and player.rect.y < self.rect.y:
-            print('In if statement')
-            if self.rect.x in range(jumpl + 10, jumpl - 15):
-                print('Enemy x' + str(self.rect.x))
-                self.jump()
-                self.moveleft()
-                self.direction = 'L'
-   
-        elif player.rect.x == self.rect.x and player.rect.y < self.rect.y:
-            self.stop()
-        print(str(self.rect.x) + ' + ' + str(self.change_x))
-        
+           
+              
     def sight(self, gameDisplay):
         #pygame.draw.rect(screen, color, (x,y,width,height), thickness)     
-        pygame.draw.rect(gameDisplay, red_c, (self.rect.x, self.rect.y, 300, 50), 0)
+        pygame.draw.rect(gameDisplay, red_c, (self.rect.x+30, self.rect.y, 200, 100), 0)
 
     def sight2(self, gameDisplay):
         #pygame.draw.rect(screen, color, (x,y,width,height), thickness)
-        pygame.draw.rect(gameDisplay, red_c, (self.rect.x, self.rect.y, -300, 60), 0)
-    
-    def patrol(self,gameDisplay,player, jumpl):
+        pygame.draw.rect(gameDisplay, red_c, (self.rect.x, self.rect.y, -200, 100), 0)
+    def newf(self,player,counter,jumpl,locationloop):
+        print(counter)
+        print(locationloop)
+        counter += 1
+    def follow1(self, player, jumpl, counter, items):
+        if self.rect.x > player.rect.x and self.rect.y > player.rect.y:
+            if self.rect.x in range(player.rect.x - 10, player.rect.x) or self.rect.x in range(player.rect.x,player.rect.x + 10):
+                self.stop()
+            else:
+                self.moveleft()
+                self.direction = 'L'              
+                for i in items:
+                    if self.rect.x in range(i[3],i[3]+55) or (self.rect.x in range(jumpl-15, jumpl) and jumpl != 0):
+                        self.jump()
+                        self.moveleft()
+                        self.direction = 'L'
+                        print('Jump left now girl!!!')
+        if self.rect.x < player.rect.x and self.rect.y > player.rect.y:
+            self.movement = 'right'
+            if self.rect.x in range(player.rect.x - 10, player.rect.x) or self.rect.x in range(player.rect.x,player.rect.x + 10):
+                self.stop()
+            else :
+                self.moveright()
+                self.direction = 'R'                                   
+                for i in items:
+                    if self.rect.x in range(i[3]-40,i[3]) or (self.rect.x in range(jumpl - 15,jumpl) and jumpl != 0):
+                        self.jump()
+                        print('jump right now girl!!')
+        if self.rect.x > player.rect.x:
+            self.movement = 'left'
+            if self.rect.x in range(player.rect.x - 10, player.rect.x) or self.rect.x in range(player.rect.x,player.rect.x + 10):
+                self.stop()
+            else:
+                self.moveleft()
+                self.direction = 'L'              
+                for i in items:
+                    if self.rect.x in range(i[3],i[3]+55) or (self.rect.x in range(jumpl-15, jumpl) and jumpl != 0):
+                        self.jump()
+                        self.moveleft()
+                        self.direction = 'L'
+        elif self.rect.x < player.rect.x:
+            self.movement = 'right'
+            if self.rect.x in range(player.rect.x - 10, player.rect.x) or self.rect.x in range(player.rect.x,player.rect.x + 10):
+                self.stop()
+            else :
+                self.moveright()
+                self.direction = 'R'                                   
+                for i in items:
+                    if self.rect.x in range(i[3]-40,i[3]) or (self.rect.x in range(jumpl - 15,jumpl) and jumpl != 0):
+                        self.jump()
+                               
+        elif self.rect.x in range(player.rect.x - 10, player.rect.x) or self.rect.x in range(player.rect.x,player.rect.x + 10):
+                self.stop()
+     
+        
+    def patrol1(self,gameDisplay,player,jumpl,counter,items):  
         if self.movement == 'right':
-            self.moveright()
-            self.direction = 'R'
-            self.sight(gameDisplay)
             newcor = player.rect.y + 34
-            #print(player.rect.x)
-            if player.rect.x in range(self.rect.x, self.rect.x + 201) and (player.rect.y in range(self.rect.y, self.rect.y + 34) or newcor in range(self.rect.y, self.rect.y + 34)):
-                self.follow(player, jumpl)
-                #print("Following")
-            elif self.rect.x >= 300:
+            if player.rect.x in range(self.rect.x, self.rect.x + 201) and (player.rect.y in range(self.rect.y, self.rect.y + 100) or newcor in range(self.rect.y, self.rect.y + 100)):
+                self.follow1(player,jumpl,counter,items)  
+                #print('Following '+ str(self.rect.x))
+            elif self.rect.x <= 600:
+                self.moveright()
+                self.direction = 'R'
+                for i in items:
+                    if self.rect.x in range(i[3]-40,i[3]):
+                        self.jump()
+            else:
                 self.movement = 'left'
-            
         elif self.movement == 'left':
-            self.moveleft()
-            self.direction = 'L'
-            self.sight2(gameDisplay)
             newcor = player.rect.y + 34
-            if player.rect.x in range(self.rect.x - 201, self.rect.x) and (player.rect.y in range(self.rect.y, self.rect.y + 34) or newcor in range(self.rect.y, self.rect.y + 34)):
-                self.follow(player,jumpl)      
-                #print("Following2") 
-            if self.rect.x == 30:
+            if player.rect.x in range(self.rect.x - 201, self.rect.x) and (player.rect.y in range(self.rect.y, self.rect.y + 100) or newcor in range(self.rect.y, self.rect.y + 100)):
+                self.follow1(player,jumpl, counter,items)
+                #print('Left Following: ' + str(self.rect.x))
+            elif self.rect.x != 0:
+                self.moveleft()
+                self.direction = 'L'
+                for i in items:                                  
+                    if self.rect.x in range(i[3],i[3]+55):
+                        print('Moveleft')  
+                        print('Jump left here')
+                        self.jump()
+                        self.moveleft()
+                        self.direction = 'L'
+            if self.rect.x == 0:
                 self.movement = 'right'
 
+            
+        
+    
