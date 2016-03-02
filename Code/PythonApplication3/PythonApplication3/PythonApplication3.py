@@ -98,9 +98,11 @@ class Player(pygame.sprite.Sprite):
             # set our right side to the left side of the item we hit
             if self.change_x > 0:
                 self.rect.right = block.rect.left
+              
             elif self.change_x < 0:
                 # Otherwise if we are moving left, do the opposite.
                 self.rect.left = block.rect.right
+                
  
         # Move up/down
         self.rect.y += self.change_y
@@ -112,8 +114,10 @@ class Player(pygame.sprite.Sprite):
             # Reset our position based on the top/bottom of the object.
             if self.change_y > 0:
                 self.rect.bottom = block.rect.top
+                assert(self.rect.bottom == block.rect.top)
             elif self.change_y < 0:
                 self.rect.top = block.rect.bottom
+                assert(self.rect.top == self.rect.bottom)
  
             # Stop our vertical movement
             self.change_y = 0
@@ -142,8 +146,8 @@ class Player(pygame.sprite.Sprite):
  
         # If it is ok to jump, set our speed upwards
         if len(platform_hit_list) > 0 or self.rect.bottom >= SCREEN_HEIGHT:
-            self.change_y = -10
- 
+            self.change_y = -6
+
     # Player-controlled movement:
     def go_left(self):
         """ Called when the user hits the left arrow. """
@@ -164,6 +168,45 @@ class Player(pygame.sprite.Sprite):
     
     def gety(self):
         return self.y
+
+#Bullet class is used for firing bullets
+class Bullet(pygame.sprite.Sprite):
+
+    #create player reference
+    gamePlayer = None
+
+    #Call superclass constructor, will take a player reference
+    def __init__(self, player, bullet_list, sprite_list, screen):
+        super().__init__()
+
+        #playe reference
+        self.player = player
+
+        #x and y coords
+        self.x = player.rect.x + 6
+        self.y = player.rect.y + 16
+
+        #create shot image and shot rectangle
+        #self.ellipse = pygame.draw.ellipse(screen, GREEN, (self.x, self.y, 2, 2), 1)
+        self.image = pygame.Surface([10, 10])
+        self.image.fill(GREEN)
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+   
+        #add bullets to both groups
+        bullet_list.add(self)
+        sprite_list.add(self)
+
+    #update will move the bullet
+    def update(self):
+
+        #translate the x coord.
+        if self.player.direction == "R":
+            self.rect.x += 6
+        else:
+            self.rect.x -= 6
+
  
 class Platform(pygame.sprite.Sprite):
     """ Platform the user can jump on """
@@ -287,7 +330,6 @@ def main():
     pygame.display.set_caption("ADAM Test")
  
     # Create player
-
     player = Player()
  
     # Create all the levels
@@ -304,14 +346,19 @@ def main():
     player.rect.x = 0
     player.rect.y = SCREEN_HEIGHT - player.rect.height
     active_sprite_list.add(player)
+
+    #Create the bullet list
+    bullet_list = pygame.sprite.Group()
  
     # Loop until the user clicks the close button.
     done = False
  
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
+
     #call title screen
     intro(screen, clock) 
+
     # -------- Main Program Loop -----------
     while not done:
         for event in pygame.event.get():
@@ -325,6 +372,10 @@ def main():
                     player.go_right()
                 if event.key == pygame.K_UP:
                     player.jump()
+
+                #if the space key is hit, fire a shot
+                if event.key == pygame.K_SPACE:
+                    bullet = Bullet(player, bullet_list, active_sprite_list, screen)
  
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT and player.change_x < 0:
@@ -333,33 +384,23 @@ def main():
                     player.stop()
 
 
-        #Apply test cases
-
-        #This code tests the players x and y coordinates in relation to various platforms
-        block_hit_list = pygame.sprite.spritecollide(player, player.level.platform_list, False)
-        for block in block_hit_list:
-
-            if player.change_x > 0:
-
-                print("Player right X assertion = "),
-                assert(player.rect.right == block.rect.left)
-
-            elif player.change_x < 0:
-
-                print("Player left X assertion = "),
-                assert(player.rect.left == block.rect.right)
-
-
-
-
-
-
-
-        
-
-
-        # Update the player.
+        # Update all sprites
         active_sprite_list.update()
+
+        #calculate bullet mechanics
+        for bullet in bullet_list:
+
+            #see if a bullet hits a platform
+            block_hit_list = pygame.sprite.spritecollide(bullet, player.level.platform_list, False)
+            for block in block_hit_list:
+
+                #update both lists
+                bullet_list.remove(bullet)
+                active_sprite_list.remove(bullet)
+
+                if bullet.rect.x < 0 or bullet.rect.x > SCREEN_WIDTH + 1:
+                    bullet_list.remove(bullet)
+                    active_sprite_list.remove(bullet)
  
         # Update items in the level
         current_level.update()
