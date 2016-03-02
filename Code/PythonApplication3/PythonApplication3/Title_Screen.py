@@ -5,6 +5,11 @@ pygame.font.init()
 #loads pygame
 pygame.init()
 
+#image files
+title = pygame.image.load('title.png')
+start = pygame.image.load('start.png')
+quit = pygame.image.load('quit.png')
+
 #color values
 BLACK = (0,0,0)
 WHITE = (255, 255, 255)
@@ -31,15 +36,15 @@ def button(gameDisplay, msg, x, y, width, height, acolor, icolor):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if x+width > mouse[0] > x and y+height > mouse[1] > y:
-        pygame.draw.rect(gameDisplay,acolor, (x,y,width,height))
+        #pygame.draw.rect(gameDisplay,acolor, (x,y,width,height))
         if click[0] == 1:
             return True
-    else:
+    """else:
         pygame.draw.rect(gameDisplay,icolor,(x,y,width,height))
    
     textSurf, textRect = text_objects(msg, smallText)
     textRect = ( (x + (width/6)), (y + (height/3)) )
-    gameDisplay.blit(textSurf, textRect)
+    gameDisplay.blit(textSurf, textRect) """
     return False
 
     
@@ -59,11 +64,12 @@ def intro(gameDisplay, clock):
                 quit()
             
         
-        gameDisplay.fill(BLACK)
-        
-        TextSurf, TextRect = text_objects('A.D.A.M.', largeText)
-        TextRect.center = ((display_width/2), (display_height/2))
-        gameDisplay.blit(TextSurf, TextRect)
+        gameDisplay.blit(title, (0,0))
+        #pygame.display.flip()
+        gameDisplay.blit(start, (150,450))
+        #pygame.display.flip()
+        gameDisplay.blit(quit, (550,450))
+        pygame.display.flip()
         
         if button(gameDisplay, "START", 150,450,100,50,BRIGHT_GREEN, GREEN):
             intro = False
