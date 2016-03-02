@@ -185,6 +185,11 @@ class Bullet(pygame.sprite.Sprite):
         #x and y coords
         self.x = player.rect.x + 6
         self.y = player.rect.y + 16
+        
+        if self.player.direction == "R":
+            self.vel = 6
+        else:
+            self.vel = -6
 
         #create shot image and shot rectangle
         #self.ellipse = pygame.draw.ellipse(screen, GREEN, (self.x, self.y, 2, 2), 1)
@@ -201,11 +206,7 @@ class Bullet(pygame.sprite.Sprite):
     #update will move the bullet
     def update(self):
 
-        #translate the x coord.
-        if self.player.direction == "R":
-            self.rect.x += 6
-        else:
-            self.rect.x -= 6
+        self.rect.x += self.vel
 
  
 class Platform(pygame.sprite.Sprite):
