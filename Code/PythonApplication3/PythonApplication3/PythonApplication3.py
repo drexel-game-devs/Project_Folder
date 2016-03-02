@@ -248,7 +248,7 @@ class Level(object):
         self.player = player
          
         # Background image
-        self.background = None
+        self.background = pygame.image.load("factory.png").convert()
  
     # Update everythign on this level
     def update(self):
@@ -261,6 +261,7 @@ class Level(object):
  
         # Draw the background
         screen.fill(WHITE)
+        screen.blit(self.background, (0,0))
  
         # Draw all the sprite lists that we have
         self.platform_list.draw(screen)
