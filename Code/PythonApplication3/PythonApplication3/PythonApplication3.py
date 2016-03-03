@@ -399,9 +399,9 @@ def main():
                 bullet_list.remove(bullet)
                 active_sprite_list.remove(bullet)
 
-                if bullet.rect.x < 0 or bullet.rect.x > SCREEN_WIDTH + 1:
-                    bullet_list.remove(bullet)
-                    active_sprite_list.remove(bullet)
+            if bullet.rect.x < 0 or bullet.rect.x > SCREEN_WIDTH + 1:
+                bullet_list.remove(bullet)
+                active_sprite_list.remove(bullet)
  
         # Update items in the level
         current_level.update()
