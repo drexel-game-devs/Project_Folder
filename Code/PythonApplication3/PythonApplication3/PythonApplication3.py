@@ -211,6 +211,11 @@ class Bullet(pygame.sprite.Sprite):
         #x and y coords
         self.x = player.rect.x + 6
         self.y = player.rect.y + 16
+        
+        if self.player.direction == "R":
+            self.vel = 6
+        else:
+            self.vel = -6
 
         #create shot image and shot rectangle
         #self.ellipse = pygame.draw.ellipse(screen, GREEN, (self.x, self.y, 2, 2), 1)
@@ -227,11 +232,7 @@ class Bullet(pygame.sprite.Sprite):
     #update will move the bullet
     def update(self):
 
-        #translate the x coord.
-        if self.player.direction == "R":
-            self.rect.x += 6
-        else:
-            self.rect.x -= 6
+        self.rect.x += self.vel
 
  
 class Platform(pygame.sprite.Sprite):
@@ -274,7 +275,7 @@ class Level(object):
         self.player = player
          
         # Background image
-        self.background = None
+        self.background = pygame.image.load("factory.png").convert()
  
     # Update everythign on this level
     def update(self):
@@ -287,6 +288,11 @@ class Level(object):
  
         # Draw the background
         screen.fill(WHITE)
+<<<<<<< HEAD
+=======
+        screen.blit(self.background, (0,0))
+ 
+>>>>>>> origin/master
         # Draw all the sprite lists that we have
         self.platform_list.draw(screen)
         self.enemy_list.draw(screen)
@@ -426,9 +432,9 @@ def main():
                 bullet_list.remove(bullet)
                 active_sprite_list.remove(bullet)
 
-                if bullet.rect.x < 0 or bullet.rect.x > SCREEN_WIDTH + 1:
-                    bullet_list.remove(bullet)
-                    active_sprite_list.remove(bullet)
+            if bullet.rect.x < 0 or bullet.rect.x > SCREEN_WIDTH + 1:
+                bullet_list.remove(bullet)
+                active_sprite_list.remove(bullet)
  
         # Update items in the level
         current_level.update()

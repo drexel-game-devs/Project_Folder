@@ -39,13 +39,13 @@ class Player(pygame.sprite.Sprite):
         #grab all images and add them to their respective lists
         image = pygame.image.load("main_player.png")
         self.right_frames.append(image)
-        image = pygame.image.load("main_walk_0.png").convert()
+        image = pygame.image.load("main_walk_0.png")
         self.right_frames.append(image)
-        image = pygame.image.load("main_walk_1.png").convert()
+        image = pygame.image.load("main_walk_1.png")
         self.right_frames.append(image)
-        image = pygame.image.load("main_walk_2.png").convert()
+        image = pygame.image.load("main_walk_2.png")
         self.right_frames.append(image)
-        image = pygame.image.load("main_walk_3.png").convert()
+        image = pygame.image.load("main_walk_3.png")
         self.right_frames.append(image)
 
         #create the right frames by flipping the left frames
@@ -191,6 +191,9 @@ class Level(object):
     """ This is a generic super-class used to define a level.
         Create a child class for each level with level-specific
         info. """
+
+    world_shift = 0
+    level_limit = -1000
  
     def __init__(self, player):
         """ Constructor. Pass in a handle to player. Needed for when moving platforms
@@ -201,7 +204,7 @@ class Level(object):
          
         # Background image
         self.background = pygame.image.load("factory.png").convert()
-       
+        
     # Update everythign on this level
     def update(self):
         """ Update everything in this level."""
@@ -213,7 +216,7 @@ class Level(object):
  
         # Draw the background
         screen.fill(WHITE)
-        
+        screen.blit(self.background, (self.world_shift // 3,0))
  
         # Draw all the sprite lists that we have
         self.platform_list.draw(screen)
@@ -233,7 +236,7 @@ class Level_01(Level):
         Level.__init__(self, player)
 
         self.background = pygame.image.load("factory.png").convert()
-        
+        self.background.set_colorkey(WHITE)
 
  
         # Array with width, height, x, and y of platform
@@ -365,7 +368,8 @@ def main():
         # Draw everything
         current_level.draw(screen)
         active_sprite_list.draw(screen)
- 
+        
+         
         # Limit to 60 frames per second
         clock.tick(60)
  
