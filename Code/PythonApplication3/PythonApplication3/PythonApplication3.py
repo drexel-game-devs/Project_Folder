@@ -71,7 +71,33 @@ class Player(pygame.sprite.Sprite):
  
         # List of sprites we can bump against
         self.level = None
- 
+
+        #sets health amount
+        global health
+        health = 30
+
+        #loads the health images
+        global health_pics
+        health_pics = []
+        for i in range(health + 1):
+            health_pics.append(pygame.image.load('health' + str(i) + '.png'))
+
+    def setHealth(self, int):
+        health = int
+
+    def getHealth():
+        return health
+
+    def minusHealth(self, screen, mouse):
+    #subtracts 1 health from player
+            #if player is hit by enemy
+        mouse = pygame.mouse.get_pressed()
+        if (mouse[0] == 1):
+            #subtracts 10 health from player
+            self.setHealth(health-1)
+            screen.blit(health_pics[health],(10,10))
+          
+
     def update(self):
         """ Move the player. """
         # Gravity
@@ -261,7 +287,6 @@ class Level(object):
  
         # Draw the background
         screen.fill(WHITE)
- 
         # Draw all the sprite lists that we have
         self.platform_list.draw(screen)
         self.enemy_list.draw(screen)
@@ -356,6 +381,9 @@ def main():
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
 
+    #Mouse, used to detect events
+    click = pygame.mouse.get_pressed()
+
     #call title screen
     intro(screen, clock) 
 
@@ -413,15 +441,22 @@ def main():
         if player.rect.left < 0:
             player.rect.left = 0
  
+
+
         # Draw everything
         current_level.draw(screen)
         active_sprite_list.draw(screen)
+        screen.blit(health_pics[health], (10,10))
+        #.minusHealth(player, screen)
+        #Minus Health
+        player.minusHealth(screen, click)
  
         # Limit to 60 frames per second
         clock.tick(60)
  
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
+        #pygame.display.update()
 
     pygame.quit()
  
