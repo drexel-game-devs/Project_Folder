@@ -288,11 +288,10 @@ class Level(object):
  
         # Draw the background
         screen.fill(WHITE)
-<<<<<<< HEAD
-=======
+
         screen.blit(self.background, (0,0))
  
->>>>>>> origin/master
+
         # Draw all the sprite lists that we have
         self.platform_list.draw(screen)
         self.enemy_list.draw(screen)
