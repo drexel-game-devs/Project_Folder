@@ -101,14 +101,14 @@ def pause(gameDisplay):
             
         
         gameDisplay.blit(pauseScreen, (0,0))
-        gameDisplay.blit(resume, (150,450))
-        gameDisplay.blit(quit, (550,450))
+        gameDisplay.blit(resume, (150,500))
+        gameDisplay.blit(quit, (550,500))
         pygame.display.flip()
         
-        if button(gameDisplay, "RESUME", 125,475,100,50,BRIGHT_GREEN, GREEN):
+        if button(gameDisplay, "RESUME", 150,500,100,50,BRIGHT_GREEN, GREEN):
             paused = False
           
-        if button(gameDisplay, "QUIT", 550,450,100,50, BRIGHT_RED, RED):
+        if button(gameDisplay, "QUIT", 550,500,100,50, BRIGHT_RED, RED):
             pygame.quit()
         
 
