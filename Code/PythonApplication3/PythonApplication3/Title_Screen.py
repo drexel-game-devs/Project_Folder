@@ -90,7 +90,7 @@ def pause(gameDisplay):
     
     #screen display size
     #display_width = pygame.display.get_surface().get_width()
-   # display_height = pygame.display.get_surface().get_height()
+    # display_height = pygame.display.get_surface().get_height()
     
     while paused:
         for event in pygame.event.get():
@@ -100,7 +100,7 @@ def pause(gameDisplay):
                 quit()
             
         
-        gameDisplay.blit(pause, (0,0))
+        gameDisplay.blit(pauseScreen, (0,0))
         gameDisplay.blit(resume, (150,450))
         gameDisplay.blit(quit, (550,450))
         pygame.display.flip()
