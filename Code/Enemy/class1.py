@@ -1,5 +1,5 @@
 import pygame, math
-from PythonApplication8 import Player
+
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
