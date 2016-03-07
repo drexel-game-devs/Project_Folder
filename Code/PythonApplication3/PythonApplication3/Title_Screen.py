@@ -7,8 +7,10 @@ pygame.init()
 
 #image files
 title = pygame.image.load('title.png')
+pauseScreen = pygame.image.load('pause.png')
 start = pygame.image.load('start.png')
 quit = pygame.image.load('quit.png')
+resume = pygame.image.load ('resume.png')
 
 #color values
 BLACK = (0,0,0)
@@ -98,8 +100,8 @@ def pause(gameDisplay):
                 quit()
             
         
-        gameDisplay.blit(title, (0,0))
-        gameDisplay.blit(start, (150,450))  #this needs to draw a graphic for a resume button.
+        gameDisplay.blit(pause, (0,0))
+        gameDisplay.blit(resume, (150,450))
         gameDisplay.blit(quit, (550,450))
         pygame.display.flip()
         
