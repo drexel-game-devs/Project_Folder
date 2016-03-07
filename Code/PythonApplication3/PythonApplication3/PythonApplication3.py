@@ -127,7 +127,7 @@ class Player(pygame.sprite.Sprite):
         if self.change_y == 0:
             self.change_y = 1
         else:
-            self.change_y += .34
+            self.change_y += .35
  
         # See if we are on the ground.
         if self.rect.y >= SCREEN_HEIGHT - self.rect.height and self.change_y >= 0:
@@ -237,10 +237,9 @@ class Platform(pygame.sprite.Sprite):
  
  
 class Level(object):
-    """ This is a generic super-class used to define a level.
-        Create a child class for each level with level-specific
-        info. """
- 
+
+    world_shift = 0
+
     def __init__(self, player):
         """ Constructor. Pass in a handle to player. Needed for when moving platforms
             collide with the player. """
@@ -262,12 +261,21 @@ class Level(object):
  
         # Draw the background
         screen.fill(WHITE)
-        screen.blit(self.background, (0,0))
+        screen.blit(self.background, (self.world_shift // 3,0))
  
         # Draw all the sprite lists that we have
         self.platform_list.draw(screen)
         self.enemy_list.draw(screen)
- 
+
+    def shift_level(self, shift_x):
+        #scrolls the world
+
+        # Keep track of the shift amount
+        self.world_shift += shift_x
+
+        # Go through all the sprite lists and shift
+        for platform in self.platform_list:
+            platform.rect.x += shift_x
  
 # Create platforms for the level
 class Level_01(Level):
@@ -277,8 +285,14 @@ class Level_01(Level):
         """ Create level 1. """
         numGen = random.randint(1,3)
 
+
         # Call the parent constructor
         Level.__init__(self, player)
+
+        self.level_limit = -1000
+
+        self.background = pygame.image.load("factory.png").convert()
+        self.background.set_colorkey(WHITE)
  
         # Array with width, height, x, and y of platform
         if numGen == 1:
@@ -388,6 +402,18 @@ def main():
 
         # Update all sprites
         active_sprite_list.update()
+        
+        current_level.update()
+ 
+        # If the player gets near the right side, shift the world left (-x)
+        if player.rect.right >= 500:
+            diff = player.rect.right - 500
+            player.rect.right = 500
+            current_level.shift_level(-diff)
+ 
+        # If the player gets near the left side, shift the world right (+x)
+        if player.rect.left < 0:
+            player.rect.left = 0
 
         #calculate bullet mechanics
         for bullet in bullet_list:
