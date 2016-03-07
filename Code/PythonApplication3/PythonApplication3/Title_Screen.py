@@ -82,5 +82,37 @@ def intro(gameDisplay, clock):
         pygame.display.update()
         clock.tick(30)
 
+def pause(gameDisplay):
+    paused = True
+    clock = pygame.time.Clock()
+    
+    #screen display size
+    #display_width = pygame.display.get_surface().get_width()
+   # display_height = pygame.display.get_surface().get_height()
+    
+    while paused:
+        for event in pygame.event.get():
+            print(event) #I used this to show mouse events 
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            
+        
+        gameDisplay.blit(title, (0,0))
+        gameDisplay.blit(start, (150,450))  #this needs to draw a graphic for a resume button.
+        gameDisplay.blit(quit, (550,450))
+        pygame.display.flip()
+        
+        if button(gameDisplay, "RESUME", 125,475,100,50,BRIGHT_GREEN, GREEN):
+            paused = False
+          
+        if button(gameDisplay, "QUIT", 550,450,100,50, BRIGHT_RED, RED):
+            pygame.quit()
+        
+
+
+        pygame.display.update()
+        clock.tick(30)
+    return
 
 

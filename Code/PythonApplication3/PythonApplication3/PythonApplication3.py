@@ -647,6 +647,8 @@ def main():
                 done = True
  
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p
+                    pause(screen)
                 if event.key == pygame.K_LEFT:
                     player.go_left()
                 if event.key == pygame.K_RIGHT:
