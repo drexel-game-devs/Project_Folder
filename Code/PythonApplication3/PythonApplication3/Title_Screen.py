@@ -87,11 +87,10 @@ def intro(gameDisplay, clock):
         pygame.display.update()
         clock.tick(30)
 
-<<<<<<< HEAD
 def setScore(int):
     global score
     score = int
-=======
+
 def pause(gameDisplay):
     paused = True
     clock = pygame.time.Clock()
@@ -124,7 +123,7 @@ def pause(gameDisplay):
         pygame.display.update()
         clock.tick(30)
     return
->>>>>>> origin/master
+
 
 def pause(gameDisplay):
     paused = True
