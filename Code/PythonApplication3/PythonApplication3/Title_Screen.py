@@ -87,9 +87,44 @@ def intro(gameDisplay, clock):
         pygame.display.update()
         clock.tick(30)
 
+<<<<<<< HEAD
 def setScore(int):
     global score
     score = int
+=======
+def pause(gameDisplay):
+    paused = True
+    clock = pygame.time.Clock()
+    
+    #screen display size
+    #display_width = pygame.display.get_surface().get_width()
+    # display_height = pygame.display.get_surface().get_height()
+    
+    while paused:
+        for event in pygame.event.get():
+            print(event) #I used this to show mouse events 
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            
+        
+        gameDisplay.blit(pauseScreen, (0,0))
+        gameDisplay.blit(resume, (150,500))
+        gameDisplay.blit(quit, (550,500))
+        pygame.display.flip()
+        
+        if button(gameDisplay, "RESUME", 150,500,100,50,BRIGHT_GREEN, GREEN):
+            paused = False
+          
+        if button(gameDisplay, "QUIT", 550,500,100,50, BRIGHT_RED, RED):
+            pygame.quit()
+        
+
+
+        pygame.display.update()
+        clock.tick(30)
+    return
+>>>>>>> origin/master
 
 def pause(gameDisplay):
     paused = True

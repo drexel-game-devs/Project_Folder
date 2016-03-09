@@ -143,10 +143,17 @@ class Player(pygame.sprite.Sprite):
             # Reset our position based on the top/bottom of the object.
             if self.change_y > 0:
                 self.rect.bottom = block.rect.top
+<<<<<<< HEAD
                 #assert(self.rect.bottom == block.rect.top)
             elif self.change_y < 0:
                 self.rect.top = block.rect.bottom
                 #assert(self.rect.top == self.rect.bottom)
+=======
+                assert(self.rect.bottom == block.rect.top)
+            elif self.change_y < 0:
+                self.rect.top = block.rect.bottom
+                assert(self.rect.top == self.rect.bottom)
+>>>>>>> origin/master
  
             # Stop our vertical movement
             self.change_y = 0
@@ -468,7 +475,11 @@ def main():
 
         # Update all sprites
         #mob1.follow1(player,jumpl,counter,items)
+<<<<<<< HEAD
         hit = mob1.patrol1(screen,player,jumpl,counter, items)
+=======
+        mob1.patrol1(screen,player,jumpl,counter, items)
+>>>>>>> origin/master
         boss1.follow(player,items)
         active_sprite_list.update()
         
@@ -516,7 +527,10 @@ def main():
         current_level.draw(screen)
         active_sprite_list.draw(screen)
         screen.blit(health_pics[health], (10,10))
+<<<<<<< HEAD
         Score(screen,SCREEN_HEIGHT,SCREEN_WIDTH)
+=======
+>>>>>>> origin/master
         #minusHealth(player, screen)
         #Minus Health
         #player.minusHealth(screen, click)

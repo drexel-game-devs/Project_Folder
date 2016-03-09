@@ -24,9 +24,12 @@ BRIGHT_RED = (255,0,0)
 largeText = pygame.font.Font('freesansbold.ttf', 85)
 smallText = pygame.font.Font('freesansbold.ttf', 20)
 
+<<<<<<< HEAD
 #score
 score = 0
 
+=======
+>>>>>>> origin/master
 #gameDisplay = pygame.display.set_mode((display_width,display_height))
 #pygame.display.set_caption('Title')
 #clock = pygame.time.Clock()
@@ -120,6 +123,7 @@ def pause(gameDisplay):
         clock.tick(30)
     return
 
+<<<<<<< HEAD
 def setScore(int):
     global scor1e
     score = int
@@ -135,4 +139,7 @@ def Score(display, display_width, display_height):
     if click[0] == 1:
         setScore(score + 5)
     #pygame.display.update()
+=======
+
+>>>>>>> origin/master
 
