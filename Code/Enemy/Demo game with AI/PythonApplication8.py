@@ -1,7 +1,8 @@
-﻿import pygame
+import pygame
 import random
 
 from Title_Screen import *
+from class1 import *
  
 # Global constants
  
@@ -142,10 +143,10 @@ class Player(pygame.sprite.Sprite):
             # Reset our position based on the top/bottom of the object.
             if self.change_y > 0:
                 self.rect.bottom = block.rect.top
-                assert(self.rect.bottom == block.rect.top)
+                #assert(self.rect.bottom == block.rect.top)
             elif self.change_y < 0:
                 self.rect.top = block.rect.bottom
-                assert(self.rect.top == self.rect.bottom)
+                #assert(self.rect.top == self.rect.bottom)
  
             # Stop our vertical movement
             self.change_y = 0
@@ -236,232 +237,6 @@ class Bullet(pygame.sprite.Sprite):
 
         self.rect.x += self.vel
 
- 
-class mob(pygame.sprite.Sprite):
-    """description of class"""
-    def __init__(self):
-        super().__init__()
-       # Call the parent's constructor
-        
- 
-        # Create an image of the block, and fill it with a color.
-        # This could also be an image loaded from the disk.
-        width = 40
-        height = 60
-        self.movement = 'right'
-
-        #Direction player is facing. Defaults to Right
-        self.direction = "R"
-        
-        #Get a list of images for animation
-        self.left_frames = []
-        self.right_frames = []
-
-        #grab all images and add them to their respective lists
-        image = pygame.image.load("enemy_stand.png")
-        self.left_frames.append(image)
-        image = pygame.image.load("enemy_walk_0.png")
-        self.left_frames.append(image)
-        image = pygame.image.load("enemy_walk_1.png")
-        self.left_frames.append(image)
-        image = pygame.image.load("enemy_walk_2.png")
-        self.left_frames.append(image)
-        image = pygame.image.load("enemy_walk_3.png")
-        self.left_frames.append(image)
-
-        #create the right frames by flipping the left frames
-        for image in range(len(self.left_frames)):
-
-            image = pygame.transform.flip(self.left_frames[image], True, False)
-            self.right_frames.append(image)
-
-        #starting image is the first in left frames
-        self.image = self.left_frames[0]
- 
-        # Set a referance to the image rect.
-        self.rect = self.image.get_rect()
- 
-        # Set speed vector of player
-        self.change_x = 0
-        self.change_y = 0
- 
-        # List of sprites we can bump against
-        self.level = None
-
-    def update(self):
-        """ Move the player. """
-        # Gravity
-        self.calc_grav()
- 
-        # Move left/right
-        self.rect.x += self.change_x
-
-        #Grab the players position
-        pos = self.rect.x
-
-        #Update the image loaded
-        if self.direction == "L":
-            frame = (pos // 30) % len(self.right_frames)
-            self.image = self.right_frames[frame]
-        else:
-            frame = (pos // 30) % len(self.left_frames)
-            self.image = self.left_frames[frame]
-
-        # See if we hit anything
-        block_hit_list = pygame.sprite.spritecollide(self, self.level.platform_list, False)
-        for block in block_hit_list:
-            # If we are moving right,
-            # set our right side to the left side of the item we hit
-            if self.change_x > 0:
-                self.rect.right = block.rect.left
-            elif self.change_x < 0:
-                # Otherwise if we are moving left, do the opposite.
-                self.rect.left = block.rect.right
- 
-        # Move up/down
-        self.rect.y += self.change_y
- 
-        # Check and see if we hit anything
-        block_hit_list = pygame.sprite.spritecollide(self, self.level.platform_list, False)
-        for block in block_hit_list:
- 
-            # Reset our position based on the top/bottom of the object.
-            if self.change_y > 0:
-                self.rect.bottom = block.rect.top
-            elif self.change_y < 0:
-                self.rect.top = block.rect.bottom
- 
-            # Stop our vertical movement
-            self.change_y = 0
-
-    def calc_grav(self):
-        if self.change_y == 0:
-            self.change_y = 1
-        else:
-            self.change_y += .50
-        if self.rect.y >= SCREEN_HEIGHT - self.rect.height and self.change_y >= 0:
-            self.change_y = 0
-            self.rect.y = SCREEN_HEIGHT - self.rect.height
-    def jump(self):
-        self.rect.y += 2
-        platform_hit_list = pygame.sprite.spritecollide(self, self.level.platform_list, False)
-        self.rect.y -= 2
-
-        if len(platform_hit_list) > 0 or self.rect.bottom >= SCREEN_HEIGHT:
-            self.change_y = -10
-    def moveleft(self):       
-        if self.rect.left < 0:
-            self.rect.left = 0          
-        else:
-            self.change_x = -3
-            self.direction = 'L'
-    def moveright(self):
-        if self.rect.right > SCREEN_WIDTH:
-            self.rect.right = SCREEN_WIDTH       
-        else:
-
-            self.change_x = 3
-            self.direction = 'R'
-
-    def stop(self):
-        self.change_x = 0
-    def spawn(self,display):
-        display.blit(self.image,(self.rect.x,self.rect.y))
-           
-              
-    def sight(self, gameDisplay):
-        #pygame.draw.rect(screen, color, (x,y,width,height), thickness)     
-        pygame.draw.rect(gameDisplay, red_c, (self.rect.x+30, self.rect.y, 200, 100), 0)
-
-    def sight2(self, gameDisplay):
-        #pygame.draw.rect(screen, color, (x,y,width,height), thickness)
-        pygame.draw.rect(gameDisplay, red_c, (self.rect.x, self.rect.y, -200, 100), 0)
-    def newf(self,player,counter,jumpl,locationloop):
-        print(counter)
-        print(locationloop)
-        counter += 1
-    def follow1(self, player, jumpl, counter, items):
-        if self.rect.x > player.rect.x and self.rect.y > player.rect.y:
-            if self.rect.x in range(player.rect.x - 10, player.rect.x) or self.rect.x in range(player.rect.x,player.rect.x + 10):
-                self.stop()
-            else:
-                self.moveleft()
-                self.direction = 'L'              
-                for i in items:
-                    if self.rect.x in range(i[3],i[3]+55) or (self.rect.x in range(jumpl-15, jumpl) and jumpl != 0):
-                        self.jump()
-                        self.moveleft()
-                        self.direction = 'L'
-                        print('Jump left now girl!!!')
-        if self.rect.x < player.rect.x and self.rect.y > player.rect.y:
-            self.movement = 'right'
-            if self.rect.x in range(player.rect.x - 10, player.rect.x) or self.rect.x in range(player.rect.x,player.rect.x + 10):
-                self.stop()
-            else :
-                self.moveright()
-                self.direction = 'R'                                   
-                for i in items:
-                    if self.rect.x in range(i[3]-40,i[3]) or (self.rect.x in range(jumpl - 15,jumpl) and jumpl != 0):
-                        self.jump()
-                        print('jump right now girl!!')
-        if self.rect.x > player.rect.x:
-            self.movement = 'left'
-            if self.rect.x in range(player.rect.x - 10, player.rect.x) or self.rect.x in range(player.rect.x,player.rect.x + 10):
-                self.stop()
-            else:
-                self.moveleft()
-                self.direction = 'L'              
-                for i in items:
-                    if self.rect.x in range(i[3],i[3]+55) or (self.rect.x in range(jumpl-15, jumpl) and jumpl != 0):
-                        self.jump()
-                        self.moveleft()
-                        self.direction = 'L'
-        elif self.rect.x < player.rect.x:
-            self.movement = 'right'
-            if self.rect.x in range(player.rect.x - 10, player.rect.x) or self.rect.x in range(player.rect.x,player.rect.x + 10):
-                self.stop()
-            else :
-                self.moveright()
-                self.direction = 'R'                                   
-                for i in items:
-                    if self.rect.x in range(i[3]-40,i[3]) or (self.rect.x in range(jumpl - 15,jumpl) and jumpl != 0):
-                        self.jump()
-                               
-        elif self.rect.x in range(player.rect.x - 10, player.rect.x) or self.rect.x in range(player.rect.x,player.rect.x + 10):
-                self.stop()
-     
-        
-    def patrol1(self,gameDisplay,player,jumpl,counter,items):  
-        if self.movement == 'right':
-            newcor = player.rect.y + 34
-            if player.rect.x in range(self.rect.x, self.rect.x + 201) and (player.rect.y in range(self.rect.y, self.rect.y + 100) or newcor in range(self.rect.y, self.rect.y + 100)):
-                self.follow1(player,jumpl,counter,items)  
-                #print('Following '+ str(self.rect.x))
-            elif self.rect.x <= 600:
-                self.moveright()
-                self.direction = 'R'
-                for i in items:
-                    if self.rect.x in range(i[3]-40,i[3]):
-                        self.jump()
-            else:
-                self.movement = 'left'
-        elif self.movement == 'left':
-            newcor = player.rect.y + 34
-            if player.rect.x in range(self.rect.x - 201, self.rect.x) and (player.rect.y in range(self.rect.y, self.rect.y + 100) or newcor in range(self.rect.y, self.rect.y + 100)):
-                self.follow1(player,jumpl, counter,items)
-                #print('Left Following: ' + str(self.rect.x))
-            elif self.rect.x != 0:
-                self.moveleft()
-                self.direction = 'L'
-                for i in items:                                  
-                    if self.rect.x in range(i[3],i[3]+55):
-                        print('Moveleft')  
-                        print('Jump left here')
-                        self.jump()
-                        self.moveleft()
-                        self.direction = 'L'
-            if self.rect.x == 0:
-                self.movement = 'right'
 
 class Platform(pygame.sprite.Sprite):
     """ Platform the user can jump on """
@@ -563,6 +338,7 @@ class Level_01(Level):
                     [300, 100, 4, 500, 500], # Crate #1
                     [50, 50, 1, 450, 550] # Cargo #3
                     ]
+            self.levellist = level
 
         elif numGen == 2:
             # Boxes number top to bottom, left to right
@@ -574,6 +350,7 @@ class Level_01(Level):
                      [50, 50, 3, 350, 550],# Box #6
                      [50, 50, 3, 450, 550]# Box #7
                     ]
+            self.levellist = level
 
         elif numGen == 3:
             # Boxes number top to bottom, left to right
@@ -585,6 +362,7 @@ class Level_01(Level):
                      [50, 50, 1, 450, 550], # Box #4
                      [100, 300, 5, 500, 500]# Cargo #2
                     ]
+            self.levellist = level
  
         # Go through the array above and add platforms
         for platform in level:
@@ -593,6 +371,9 @@ class Level_01(Level):
             block.rect.y = platform[4]
             block.player = self.player
             self.platform_list.add(block)
+
+    def returnlevel(self):
+        return self.levellist
  
  
 def main():
@@ -607,25 +388,38 @@ def main():
  
     # Create player
     player = Player()
+    mob1 = mob() 
+    boss1 = boss()
  
+    
     # Create all the levels
     level_list = []
     level_list.append( Level_01(player) )
+    level_list.append(Level_01(mob1))
+    level_list.append(Level_01(boss1))
  
-    background = pygame.image.load("factory.png").convert()
-
     # Set the current level
     current_level_no = 0
     current_level = level_list[current_level_no]
  
     active_sprite_list = pygame.sprite.Group()
     player.level = current_level
- 
-    player.rect.x = 0
-    player.rect.y = SCREEN_HEIGHT - player.rect.height
-    active_sprite_list.add(player)
+    mob1.level = current_level
+    boss1.level = current_level
 
  
+    player.rect.x = 0
+    mob1.rect.x = 0
+    boss1.rect.x = 0
+
+    player.rect.y = SCREEN_HEIGHT - player.rect.height
+    mob1.rect.y = 0
+    boss1.rect.y = 0
+    active_sprite_list.add(player)
+    active_sprite_list.add(mob1)
+    active_sprite_list.add(boss1)
+
+    
     #Create the bullet list
     bullet_list = pygame.sprite.Group()
  
@@ -634,6 +428,8 @@ def main():
  
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
+    jumpl = 0
+    counter = 0
 
     #Mouse, used to detect events
     click = pygame.mouse.get_pressed()
@@ -642,6 +438,7 @@ def main():
     intro(screen, clock) 
 
     # -------- Main Program Loop -----------
+    items = current_level.returnlevel()
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -655,6 +452,7 @@ def main():
                 if event.key == pygame.K_RIGHT:
                     player.go_right()
                 if event.key == pygame.K_UP:
+                    jumpl = player.rect.x
                     player.jump()
 
                 #if the space key is hit, fire a shot
@@ -669,6 +467,9 @@ def main():
 
 
         # Update all sprites
+        #mob1.follow1(player,jumpl,counter,items)
+        hit = mob1.patrol1(screen,player,jumpl,counter, items)
+        boss1.follow(player,items)
         active_sprite_list.update()
         
         current_level.update()
@@ -715,12 +516,11 @@ def main():
         current_level.draw(screen)
         active_sprite_list.draw(screen)
         screen.blit(health_pics[health], (10,10))
-        
-        #prints score which is a function within Title_Screen
-        #Score will handle adding score
-        Score(screen,SCREEN_WIDTH, SCREEN_HEIGHT)
-
-         
+        Score(screen,SCREEN_HEIGHT,SCREEN_WIDTH)
+        #minusHealth(player, screen)
+        #Minus Health
+        #player.minusHealth(screen, click)
+ 
         # Limit to 60 frames per second
         clock.tick(60)
  
