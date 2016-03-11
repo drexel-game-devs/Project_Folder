@@ -3,7 +3,7 @@ import time
 pygame.font.init()
 
 #loads pygame
-#pygame.init()
+pygame.init()
 
 #image files
 title = pygame.image.load('title.png')
@@ -87,10 +87,6 @@ def intro(gameDisplay, clock):
         pygame.display.update()
         clock.tick(30)
 
-def setScore(int):
-    global score
-    score = int
-
 def pause(gameDisplay):
     paused = True
     clock = pygame.time.Clock()
@@ -124,47 +120,19 @@ def pause(gameDisplay):
         clock.tick(30)
     return
 
-
-def pause(gameDisplay):
-    paused = True
-    clock = pygame.time.Clock()
-    
-    #screen display size
-    #display_width = pygame.display.get_surface().get_width()
-    # display_height = pygame.display.get_surface().get_height()
-    
-    while paused:
-        for event in pygame.event.get():
-            print(event) #I used this to show mouse events 
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            
-        
-        gameDisplay.blit(pauseScreen, (0,0))
-        gameDisplay.blit(resume, (150,500))
-        gameDisplay.blit(quit, (550,500))
-        pygame.display.flip()
-        
-        if button(gameDisplay, "RESUME", 150,500,100,50,BRIGHT_GREEN, GREEN):
-            paused = False
-          
-        if button(gameDisplay, "QUIT", 550,500,100,50, BRIGHT_RED, RED):
-            pygame.quit()
-        
-
-
-        pygame.display.update()
-        clock.tick(30)
+def setScore(int):
+    global score
+    score = int
 
 def Score(display, display_width, display_height):
-    width = display_width / 2
+    width = (display_width / 2) + 50
     height = 10
     click = pygame.mouse.get_pressed()
     label = smallText.render('SCORE', True, WHITE)
     display.blit(label, (width, height))
     value = smallText.render(str(score), True, WHITE)
-    display.blit(value, (width + 25, height + 15))
+    display.blit(value, (width + 15, height + 20))
     if click[0] == 1:
         setScore(score + 5)
     #pygame.display.update()
+
