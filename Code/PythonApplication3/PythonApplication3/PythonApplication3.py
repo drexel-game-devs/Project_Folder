@@ -54,6 +54,8 @@ class Player(pygame.sprite.Sprite):
         self.right_frames.append(image)
         image = pygame.image.load("main_walk_3.png")
         self.right_frames.append(image)
+        
+        self.distance = 0 #Total distance traveled, used to determine which frame to display.
 
         #create the right frames by flipping the left frames
         for image in range(len(self.right_frames)):
@@ -110,13 +112,15 @@ class Player(pygame.sprite.Sprite):
 
         #Grab the players position
         pos = self.rect.x
+        
+        self.distance += abs(self.change_x)
 
         #Update the image loaded
         if self.direction == "R":
-            frame = ((pos - level.level[0][3]) // 30) % len(self.right_frames)
+            frame = (self.distance // 30) % len(self.right_frames)
             self.image = self.right_frames[frame]
         else:
-            frame = ((pos - level.level[0][3]) // 30) % len(self.left_frames)
+            frame = (self.distance // 30) % len(self.left_frames)
             self.image = self.left_frames[frame]
 
         # See if we hit anything
