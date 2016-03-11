@@ -100,7 +100,7 @@ class Player(pygame.sprite.Sprite):
             screen.blit(health_pics[health],(10,10))
           
 
-    def update(self):
+    def update(self, level):
         """ Move the player. """
         # Gravity
         self.calc_grav()
@@ -113,10 +113,10 @@ class Player(pygame.sprite.Sprite):
 
         #Update the image loaded
         if self.direction == "R":
-            frame = (pos // 30) % len(self.right_frames)
+            frame = ((pos - level.level[0][3]) // 30) % len(self.right_frames)
             self.image = self.right_frames[frame]
         else:
-            frame = (pos // 30) % len(self.left_frames)
+            frame = ((pos - level.level[0][3]) // 30) % len(self.left_frames)
             self.image = self.left_frames[frame]
 
         # See if we hit anything
@@ -288,7 +288,7 @@ class mob(pygame.sprite.Sprite):
         # List of sprites we can bump against
         self.level = None
 
-    def update(self):
+    def update(self, level):
         """ Move the player. """
         # Gravity
         self.calc_grav()
@@ -300,11 +300,11 @@ class mob(pygame.sprite.Sprite):
         pos = self.rect.x
 
         #Update the image loaded
-        if self.direction == "L":
-            frame = (pos // 30) % len(self.right_frames)
+        if self.direction == "R":
+            frame = ((pos - level.level[0][3]) // 30) % len(self.right_frames)
             self.image = self.right_frames[frame]
         else:
-            frame = (pos // 30) % len(self.left_frames)
+            frame = ((pos - level.level[0][3]) // 30) % len(self.left_frames)
             self.image = self.left_frames[frame]
 
         # See if we hit anything
@@ -553,11 +553,12 @@ class Level_01(Level):
 
         self.background = pygame.image.load("factory.png").convert()
         self.background.set_colorkey(WHITE)
+        self.level = 0
  
         # Array with width, height, x, and y of platform
         if numGen == 1:
             # Boxes number top to bottom, left to right
-            level = [
+            self.level = [
                     [50, 50, 2, 600, 450],# Cargo #1
                     [50, 50, 1, 700, 450],# Cargo #2
                     [300, 100, 4, 500, 500], # Crate #1
@@ -566,7 +567,7 @@ class Level_01(Level):
 
         elif numGen == 2:
             # Boxes number top to bottom, left to right
-            level = [[50, 50, 2, 250, 500],# Box #1
+            self.level = [[50, 50, 2, 250, 500],# Box #1
                      [50, 50, 1, 350, 500],# Box #2
                      [50, 50, 2, 150, 550],# Box #3
                      [50, 50, 1, 250, 550],# Box #4
@@ -577,7 +578,7 @@ class Level_01(Level):
 
         elif numGen == 3:
             # Boxes number top to bottom, left to right
-            level = [
+            self.level = [
                      [50, 50, 2, 600, 450], # Box #1
                      [100, 300, 4, 650, 400],# Cargo #1
                      [50, 50, 1, 250, 550], # Box #2
@@ -587,7 +588,7 @@ class Level_01(Level):
                     ]
  
         # Go through the array above and add platforms
-        for platform in level:
+        for platform in self.level:
             block = Platform(platform[0], platform[1], platform[2])
             block.rect.x = platform[3]
             block.rect.y = platform[4]
@@ -668,7 +669,7 @@ def main():
 
 
         # Update all sprites
-        active_sprite_list.update()
+        active_sprite_list.update(current_level)
         
         current_level.update()
  
