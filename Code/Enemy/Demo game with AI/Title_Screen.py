@@ -27,6 +27,15 @@ smallText = pygame.font.Font('freesansbold.ttf', 20)
 #score
 score = 0
 
+#sets health amount
+health = 30
+
+#loads the health images
+global health_pics
+health_pics = []
+for i in range(health + 1):
+    health_pics.append(pygame.image.load('health' + str(i) + '.png'))
+
 #gameDisplay = pygame.display.set_mode((display_width,display_height))
 #pygame.display.set_caption('Title')
 #clock = pygame.time.Clock()
@@ -63,7 +72,7 @@ def intro(gameDisplay, clock):
     
     while intro:
         for event in pygame.event.get():
-            print(event) #I used this to show mouse events 
+            #print(event) #I used this to show mouse events 
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -77,6 +86,7 @@ def intro(gameDisplay, clock):
         pygame.display.flip()
         
         if button(gameDisplay, "START", 150,450,100,50,BRIGHT_GREEN, GREEN):
+            print('start!')
             intro = False
           
         if button(gameDisplay, "QUIT", 550,450,100,50, BRIGHT_RED, RED):
@@ -84,7 +94,7 @@ def intro(gameDisplay, clock):
         
 
 
-        pygame.display.update()
+        pygame.display.flip()
         clock.tick(30)
 
 def pause(gameDisplay):
@@ -135,4 +145,30 @@ def Score(display, display_width, display_height):
     if click[0] == 1:
         setScore(score + 5)
     #pygame.display.update()
+
+def setHealth(int):
+    global health
+    health = int
+
+def getHealth():
+    return health
+
+def drawHealth(screen):
+    screen.blit(health_pics[health], (10,10))
+
+def minusHealth( screen, spritelist,player):
+#subtracts 1 health from player
+        #if player is hit by enemy
+    mouse = pygame.mouse.get_pressed()
+    if (mouse[0] == 1):
+        #subtracts 1 health from player
+        setHealth(health-1)
+        screen.blit(health_pics[health],(10,10))
+        if health < 0:
+            setHealth(0)
+    if (health == 0):
+        print('dead. X_X')
+        #player.kill()
+        return False
+        setHealth(30)
 

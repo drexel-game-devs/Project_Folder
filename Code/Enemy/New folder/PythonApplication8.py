@@ -1,16 +1,27 @@
-﻿import pygame
+import pygame
 import random
+import time
+import threading
 
+from Title_Screen import *
+from class1 import *
+ 
 # Global constants
+listofmobs = []
 
 # Colors
-BLACK = (0, 0, 0)
+BLACK = (0,0,0)
 WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
+GREEN = (0,255,0)
+red_c = (255,0,0)
+tempspeed = 3.5
+
  
 # Screen dimensions
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
+
+
  
  
 class Player(pygame.sprite.Sprite):
@@ -66,7 +77,33 @@ class Player(pygame.sprite.Sprite):
  
         # List of sprites we can bump against
         self.level = None
- 
+
+        #sets health amount
+        global health
+        health = 30
+
+        #loads the health images
+        global health_pics
+        health_pics = []
+        for i in range(health + 1):
+            health_pics.append(pygame.image.load('health' + str(i) + '.png'))
+
+    def setHealth(self, int):
+        health = int
+
+    def getHealth():
+        return health
+
+    def minusHealth(self, screen, mouse):
+    #subtracts 1 health from player
+            #if player is hit by enemy
+        mouse = pygame.mouse.get_pressed()
+        if (mouse[0] == 1):
+            #subtracts 1 health from player
+            self.setHealth(health-1)
+            screen.blit(health_pics[health],(10,10))
+          
+
     def update(self):
         """ Move the player. """
         # Gravity
@@ -93,9 +130,11 @@ class Player(pygame.sprite.Sprite):
             # set our right side to the left side of the item we hit
             if self.change_x > 0:
                 self.rect.right = block.rect.left
+              
             elif self.change_x < 0:
                 # Otherwise if we are moving left, do the opposite.
                 self.rect.left = block.rect.right
+                
  
         # Move up/down
         self.rect.y += self.change_y
@@ -107,8 +146,10 @@ class Player(pygame.sprite.Sprite):
             # Reset our position based on the top/bottom of the object.
             if self.change_y > 0:
                 self.rect.bottom = block.rect.top
+                assert(self.rect.bottom == block.rect.top)
             elif self.change_y < 0:
                 self.rect.top = block.rect.bottom
+                assert(self.rect.top == self.rect.bottom)
  
             # Stop our vertical movement
             self.change_y = 0
@@ -118,7 +159,7 @@ class Player(pygame.sprite.Sprite):
         if self.change_y == 0:
             self.change_y = 1
         else:
-            self.change_y += .55
+            self.change_y += .35
  
         # See if we are on the ground.
         if self.rect.y >= SCREEN_HEIGHT - self.rect.height and self.change_y >= 0:
@@ -137,8 +178,8 @@ class Player(pygame.sprite.Sprite):
  
         # If it is ok to jump, set our speed upwards
         if len(platform_hit_list) > 0 or self.rect.bottom >= SCREEN_HEIGHT:
-            self.change_y = -10
- 
+            self.change_y = -6
+
     # Player-controlled movement:
     def go_left(self):
         """ Called when the user hits the left arrow. """
@@ -159,7 +200,47 @@ class Player(pygame.sprite.Sprite):
     
     def gety(self):
         return self.y
- 
+
+#Bullet class is used for firing bullets
+class Bullet(pygame.sprite.Sprite):
+
+    #create player reference
+    gamePlayer = None
+
+    #Call superclass constructor, will take a player reference
+    def __init__(self, player, bullet_list, sprite_list, screen):
+        super().__init__()
+
+        #playe reference
+        self.player = player
+
+        #x and y coords
+        self.x = player.rect.x + 6
+        self.y = player.rect.y + 16
+        
+        if self.player.direction == "R":
+            self.vel = 10
+        else:
+            self.vel = -10
+
+        #create shot image and shot rectangle
+        #self.ellipse = pygame.draw.ellipse(screen, GREEN, (self.x, self.y, 2, 2), 1)
+        self.image = pygame.Surface([10, 10])
+        self.image.fill(GREEN)
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+   
+        #add bullets to both groups
+        bullet_list.add(self)
+        sprite_list.add(self)
+
+    #update will move the bullet
+    def update(self):
+
+        self.rect.x += self.vel
+
+
 class Platform(pygame.sprite.Sprite):
     """ Platform the user can jump on """
  
@@ -168,7 +249,7 @@ class Platform(pygame.sprite.Sprite):
             an array of 5 numbers like what's defined at the top of this
             code. """
         super().__init__()
-
+ 
         if integer == 1:
             self.image = pygame.image.load("crate1.png")
         elif integer == 2:
@@ -188,12 +269,9 @@ class Platform(pygame.sprite.Sprite):
  
  
 class Level(object):
-    """ This is a generic super-class used to define a level.
-        Create a child class for each level with level-specific
-        info. """
 
     world_shift = 0
- 
+
     def __init__(self, player):
         """ Constructor. Pass in a handle to player. Needed for when moving platforms
             collide with the player. """
@@ -203,7 +281,7 @@ class Level(object):
          
         # Background image
         self.background = pygame.image.load("factory.png").convert()
-        
+ 
     # Update everythign on this level
     def update(self):
         """ Update everything in this level."""
@@ -215,11 +293,16 @@ class Level(object):
  
         # Draw the background
         screen.fill(WHITE)
+
         screen.blit(self.background, (self.world_shift // 3,0))
+
+
+        #screen.blit(self.background, (0,0))
+
  
+
         # Draw all the sprite lists that we have
         self.platform_list.draw(screen)
-        
         self.enemy_list.draw(screen)
 
     def shift_level(self, shift_x):
@@ -231,7 +314,8 @@ class Level(object):
         # Go through all the sprite lists and shift
         for platform in self.platform_list:
             platform.rect.x += shift_x
-        
+        for enemy in listofmobs:
+            enemy.rect.x += shift_x
  
 # Create platforms for the level
 class Level_01(Level):
@@ -239,8 +323,8 @@ class Level_01(Level):
  
     def __init__(self, player):
         """ Create level 1. """
-        numGen1 = random.randint(3,3)
-        numGen2 = random.randint(3,3)
+        numGen1 = random.randint(1,3)
+        numGen2 = random.randint(1,3)
 
         # Call the parent constructor
         Level.__init__(self, player)
@@ -249,7 +333,6 @@ class Level_01(Level):
 
         self.background = pygame.image.load("factory.png").convert()
         self.background.set_colorkey(WHITE)
-
  
         # Array with width, height, x, and y of platform
         if numGen1 == 1:
@@ -351,9 +434,34 @@ class Level_01(Level):
             block.rect.y = platform[4]
             block.player = self.player
             self.platform_list.add(block)
- 
- 
+
+    def returnlevel(self):
+        return self.levellist
+
+def spawnnew(listofmobs,level_list,current_level,active_sprite_list):
+    listofmobs.append(mob())
+    listofmobs[-1].rect.x = 200
+    listofmobs[-1].rect.y = 0
+    level_list.append(Level_01(listofmobs[-1]))
+    listofmobs[-1].level = current_level
+    active_sprite_list.add(listofmobs[-1])
+    threading.Timer(10.0,spawnnew,(listofmobs, level_list,current_level,active_sprite_list)).start()
+
+def spawnmobs(listofmobs, level_list,current_level,active_sprite_list):
+    count3 = 0
+    for i in range(0,1):
+        listofmobs.append(mob())
+    for i in listofmobs:
+        count3 = count3 + 200
+        i.rect.x = 20 + count3
+        i.rect.y = 0
+        level_list.append(Level_01(i))
+        i.level = current_level
+        active_sprite_list.add(i)
+    #threading.Timer(5.0,spawnmobs,(listofmobs, level_list,current_level,active_sprite_list)).start()
+
 def main():
+    
     """ Main Program """
     pygame.init()
  
@@ -361,15 +469,25 @@ def main():
     size = [SCREEN_WIDTH, SCREEN_HEIGHT]
     screen = pygame.display.set_mode(size)
  
-    pygame.display.set_caption("Joe's Copy Test")
+    pygame.display.set_caption("ADAM Test")
  
     # Create player
-
+    #list of mobs
+    
     player = Player()
+    
+    boss1 = boss()
+    boss1.rect.y = 0
+    boss1.rect.x = 300
  
+    
     # Create all the levels
     level_list = []
+    #at mob to the level
+    
     level_list.append( Level_01(player) )
+    
+    level_list.append(Level_01(boss1))
  
     # Set the current level
     current_level_no = 0
@@ -377,80 +495,222 @@ def main():
  
     active_sprite_list = pygame.sprite.Group()
     player.level = current_level
- 
+    
+    boss1.level = current_level
+    #add mobs to level
+    
+
     player.rect.x = 0
+    
     player.rect.y = SCREEN_HEIGHT - player.rect.height
+
+    #spawnmobs(listofmobs,level_list,current_level,active_sprite_list)
+    
+    #add mobs to activity sprite
+    
+
     active_sprite_list.add(player)
+    
+    active_sprite_list.add(boss1)
+
+
+    
+    #Create the bullet list
+    bullet_list = pygame.sprite.Group()
  
     # Loop until the user clicks the close button.
     done = False
  
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
- 
+    jumpl = 0
+    counter = 0
+    intervals = 0
+    intervals1 = 0
+
+
+    #Mouse, used to detect events
+    click = pygame.mouse.get_pressed()
+
+    #call title screen
+    intro(screen, clock) 
+
+
     # -------- Main Program Loop -----------
+    spawnmobs(listofmobs,level_list,current_level,active_sprite_list)
+    spawnnew(listofmobs,level_list,current_level,active_sprite_list)
+
+    items = current_level.returnlevel()
+    shot1 = 'false'
+    TimetoKillPlayer = 0
     while not done:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
+        if TimetoKillPlayer == 15:
+                active_sprite_list.remove(TimetoKillPlayer)
+                pygame.quit()
+
+        else:       
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    done = True
  
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    player.go_left()
-                if event.key == pygame.K_RIGHT:
-                    player.go_right()
-                if event.key == pygame.K_UP:
-                    player.jump()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        pause(screen)
+                    if event.key == pygame.K_LEFT:
+                        player.go_left()
+                    if event.key == pygame.K_RIGHT:
+                        player.go_right()
+                    if event.key == pygame.K_UP:
+                        jumpl = player.rect.x
+                        player.jump()
+
+                    #if the space key is hit, fire a shot
+                    if event.key == pygame.K_SPACE:
+                        bullet = Bullet(player, bullet_list, active_sprite_list, screen)
  
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT and player.change_x < 0:
-                    player.stop()
-                if event.key == pygame.K_RIGHT and player.change_x > 0:
-                    player.stop()
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_LEFT and player.change_x < 0:
+                        player.stop()
+                    if event.key == pygame.K_RIGHT and player.change_x > 0:
+                        player.stop()
 
-
-        #Apply test cases
-
-        #This code tests the players x and y coordinates in relation to various platforms
-        block_hit_list = pygame.sprite.spritecollide(player, player.level.platform_list, False)
-        for block in block_hit_list:
-
-            if player.change_x > 0:
-
-                print("Player right X assertion = "),
-                assert(player.rect.right == block.rect.left)
-
-            elif player.change_x < 0:
-
-                print("Player left X assertion = "),
-                assert(player.rect.left == block.rect.right)
-
-        # Update the player.
-        active_sprite_list.update()
- 
-        # Update items in the level
-        current_level.update()
- 
-        # If the player gets near the right side, shift the world left (-x)
-        if player.rect.right >= 500:
-            diff = player.rect.right - 500
-            player.rect.right = 500
-            current_level.shift_level(-diff)
- 
-        # If the player gets near the left side, shift the world right (+x)
-        if player.rect.left < 0:
-            player.rect.left = 0
- 
-        # Draw everything
-        current_level.draw(screen)
-        active_sprite_list.draw(screen)
         
-         
-        # Limit to 60 frames per second
-        clock.tick(60)
+        
+            boss1.follow(player,items)
+            # Update all sprites
+        
+            for i in listofmobs:
+                i.patrol1(screen,player,jumpl,counter, items, bullet_list, active_sprite_list,screen,shot1)
+                if i.movement == 'right':
+                    newcor = player.rect.y + 40
+                    #set when to start shoting
+                    if player.rect.x in range(i.rect.x-30, i.rect.x + 400) and (player.rect.y in range(i.rect.y-40, i.rect.y + 140) or newcor in range(i.rect.y-60, i.rect.y + 140)):
+                        intervals += 1
+                        #every 2 seconds shot
+                        if intervals % 60 == 0 and intervals == 120:
+                            intervals = 0
+                            #print(intervals)
+                            bullet1 = Bullet(i, bullet_list, active_sprite_list, screen)
+                            for bullet1 in bullet_list:
+
+                                #see if a bullet hits a platform
+                                block_hit_list = pygame.sprite.spritecollide(bullet1, i.level.platform_list, False)
+                                for block in block_hit_list:
+
+                                    #update both lists
+                                    bullet_list.remove(bullet1)
+                                    active_sprite_list.remove(bullet1)
+
+                                if bullet1.rect.x < 0 or bullet1.rect.x > SCREEN_WIDTH + 1:
+                                    bullet_list.remove(bullet1)
+                                    active_sprite_list.remove(bullet1)
+                                if bullet1.rect.x in range(player.rect.x-10, player.rect.x+10) and bullet1.rect.y in range(player.rect.y,player.rect.y+50):
+                                    bullet_list.remove(bullet1)
+                                    active_sprite_list.remove(bullet1)
+                                    TimetoKillPlayer += 1
+                                    print(TimetoKillPlayer)
+                        
+                                                        
+                elif i.movement == 'left':
+                    #set when to start shoting
+                    if player.rect.x in range(i.rect.x - 400, i.rect.x+30) and (player.rect.y in range(i.rect.y-40, i.rect.y + 130) or newcor in range(i.rect.y-60, i.rect.y + 140)):
+                        intervals1 += 1
+                        #every 2 seconds shot
+                        if intervals1 % 60 == 0 and intervals1 == 120:
+                            intervals1 = 0
+                            bullet1 = Bullet(i, bullet_list, active_sprite_list, screen)
+                            for bullet1 in bullet_list:
+
+                                #see if a bullet hits a platform
+                                block_hit_list = pygame.sprite.spritecollide(bullet1, i.level.platform_list, False)
+                                for block in block_hit_list:
+
+                                    #update both lists
+                                    bullet_list.remove(bullet1)
+                                    active_sprite_list.remove(bullet1)
+
+                                if bullet1.rect.x < 0 or bullet1.rect.x > SCREEN_WIDTH + 1:
+                                    bullet_list.remove(bullet1)
+                                    active_sprite_list.remove(bullet1)
+                                if bullet1.rect.x in range(player.rect.x-10, player.rect.x+10) and bullet1.rect.y in range(player.rect.y,player.rect.y+50):
+                                    bullet_list.remove(bullet1)
+                                    active_sprite_list.remove(bullet1)
+                                    TimetoKillPlayer += 1
+                                    print(TimetoKillPlayer)
+                            
+            
+        
+            active_sprite_list.update()
+
+        
+            current_level.update()
  
-        # Go ahead and update the screen with what we've drawn.
-        pygame.display.flip()
+            # If the player gets near the right side, shift the world left (-x)
+            if player.rect.right >= 500:
+                diff = player.rect.right - 500
+                player.rect.right = 500
+                current_level.shift_level(-diff)
+ 
+            # If the player gets near the left side, shift the world right (+x)
+            if player.rect.left < 0:
+                player.rect.left = 0
+
+        
+
+            #calculate bullet mechanics
+            for bullet in bullet_list:
+
+                #see if a bullet hits a platform
+                block_hit_list = pygame.sprite.spritecollide(bullet, player.level.platform_list, False)
+                for block in block_hit_list:
+
+                    #update both lists
+                    bullet_list.remove(bullet)
+                    active_sprite_list.remove(bullet)
+
+                if bullet.rect.x < 0 or bullet.rect.x > SCREEN_WIDTH + 1:
+                    bullet_list.remove(bullet)
+                    active_sprite_list.remove(bullet)
+                for i in listofmobs:
+                    if bullet.rect.x in range(i.rect.x,i.rect.x+40) and bullet.rect.y in range(i.rect.y,i.rect.y+50):
+                       bullet_list.remove(bullet)
+                       active_sprite_list.remove(bullet)
+                       active_sprite_list.remove(i)
+                       #level_list.remove(i)
+                       listofmobs.remove(i) 
+            
+            
+ 
+            # Update items in the level
+            current_level.update()
+ 
+            # If the player gets near the right side, shift the world left (-x)
+            if player.rect.right > SCREEN_WIDTH:
+                player.rect.right = SCREEN_WIDTH
+ 
+            # If the player gets near the left side, shift the world right (+x)
+            if player.rect.left < 0:
+                player.rect.left = 0
+ 
+
+
+            # Draw everything
+            current_level.draw(screen)
+            active_sprite_list.draw(screen)
+            screen.blit(health_pics[health], (10,10))
+            #listofmobs[0].sight(screen)
+            #minusHealth(player, screen)
+            #Minus Health
+            #player.minusHealth(screen, click)
+ 
+            # Limit to 60 frames per second
+            clock.tick(60)
+ 
+            # Go ahead and update the screen with what we've drawn.
+            pygame.display.flip()
+            #pygame.display.update()
+        
+
 
     pygame.quit()
  
