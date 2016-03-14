@@ -493,7 +493,7 @@ def main():
         active_sprite_list.draw(screen)
         Score(screen,SCREEN_HEIGHT,SCREEN_WIDTH)
         drawHealth(screen)
-        minusHealth(screen)
+        minusHealth(screen, active_sprite_list, player)
         #Minus Health
         #player.minusHealth(screen, click)
  
