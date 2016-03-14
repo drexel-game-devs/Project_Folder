@@ -74,31 +74,6 @@ class Player(pygame.sprite.Sprite):
  
         # List of sprites we can bump against
         self.level = None
-
-        #sets health amount
-        global health
-        health = 30
-
-        #loads the health images
-        global health_pics
-        health_pics = []
-        for i in range(health + 1):
-            health_pics.append(pygame.image.load('health' + str(i) + '.png'))
-
-    def setHealth(self, int):
-        health = int
-
-    def getHealth():
-        return health
-
-    def minusHealth(self, screen, mouse):
-    #subtracts 1 health from player
-            #if player is hit by enemy
-        mouse = pygame.mouse.get_pressed()
-        if (mouse[0] == 1):
-            #subtracts 1 health from player
-            self.setHealth(health-1)
-            screen.blit(health_pics[health],(10,10))
           
 
     def update(self):
@@ -512,15 +487,13 @@ def main():
         # If the player gets near the left side, shift the world right (+x)
         if player.rect.left < 0:
             player.rect.left = 0
- 
-
 
         # Draw everything
         current_level.draw(screen)
         active_sprite_list.draw(screen)
-        screen.blit(health_pics[health], (10,10))
         Score(screen,SCREEN_HEIGHT,SCREEN_WIDTH)
-        #minusHealth(player, screen)
+        drawHealth(screen)
+        minusHealth(screen)
         #Minus Health
         #player.minusHealth(screen, click)
  

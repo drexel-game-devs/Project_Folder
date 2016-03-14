@@ -27,6 +27,15 @@ smallText = pygame.font.Font('freesansbold.ttf', 20)
 #score
 score = 0
 
+#sets health amount
+health = 30
+
+#loads the health images
+global health_pics
+health_pics = []
+for i in range(health + 1):
+    health_pics.append(pygame.image.load('health' + str(i) + '.png'))
+
 #gameDisplay = pygame.display.set_mode((display_width,display_height))
 #pygame.display.set_caption('Title')
 #clock = pygame.time.Clock()
@@ -135,4 +144,23 @@ def Score(display, display_width, display_height):
     if click[0] == 1:
         setScore(score + 5)
     #pygame.display.update()
+
+def setHealth(int):
+    global health
+    health = int
+
+def getHealth():
+    return health
+
+def drawHealth(screen):
+    screen.blit(health_pics[health], (10,10))
+
+def minusHealth( screen):
+#subtracts 1 health from player
+        #if player is hit by enemy
+    mouse = pygame.mouse.get_pressed()
+    if (mouse[0] == 1):
+        #subtracts 1 health from player
+        setHealth(health-1)
+        screen.blit(health_pics[health],(10,10))
 
