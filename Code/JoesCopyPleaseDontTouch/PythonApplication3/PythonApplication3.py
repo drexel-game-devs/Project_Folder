@@ -253,7 +253,7 @@ class Level_01(Level):
         # Array with width, height, x, and y of platform
         if numGen == 1:
             # Boxes number top to bottom, left to right
-            level = [
+            level1 = [
                     [50, 50, 2, 600, 450],# Cargo #1
                     [50, 50, 1, 700, 450],# Cargo #2
                     [300, 100, 4, 500, 500], # Crate #1
@@ -262,7 +262,7 @@ class Level_01(Level):
 
         elif numGen == 2:
             # Boxes number top to bottom, left to right
-            level = [[50, 50, 2, 250, 500],# Box #1
+            level1 = [[50, 50, 2, 250, 500],# Box #1
                      [50, 50, 1, 350, 500],# Box #2
                      [50, 50, 2, 150, 550],# Box #3
                      [50, 50, 1, 250, 550],# Box #4
@@ -272,7 +272,7 @@ class Level_01(Level):
                     ]
         elif numGen == 3:
             # Boxes number top to bottom, left to right
-            level = [
+            level1 = [
                      [50, 50, 2, 600, 450], # Box #1
                      [100, 300, 4, 650, 400],# Cargo #1
                      [50, 50, 1, 250, 550], # Box #2
@@ -280,9 +280,32 @@ class Level_01(Level):
                      [50, 50, 1, 450, 550], # Box #4
                      [100, 300, 5, 500, 500]# Cargo #2
                     ]
+        level2 = [
+                 [50, 50, 1, 1000, 550]
+                 ]
+        level3 = [
+                 [300,100, 5, 1800, 500],
+                 [300,100, 4, 1800, 400],
+                 [300,100, 6, 1800, 300],
+                 [300,100, 7, 1800, 200],
+                 [300,100, 5, 1800, 100],
+                 [300,100, 6, 1800, 0],
+                 ]
  
         # Go through the array above and add platforms
-        for platform in level:
+        for platform in level1:
+            block = Platform(platform[0], platform[1], platform[2])
+            block.rect.x = platform[3]
+            block.rect.y = platform[4]
+            block.player = self.player
+            self.platform_list.add(block)
+        for platform in level2:
+            block = Platform(platform[0], platform[1], platform[2])
+            block.rect.x = platform[3]
+            block.rect.y = platform[4]
+            block.player = self.player
+            self.platform_list.add(block)
+        for platform in level3:
             block = Platform(platform[0], platform[1], platform[2])
             block.rect.x = platform[3]
             block.rect.y = platform[4]
