@@ -72,7 +72,7 @@ def intro(gameDisplay, clock):
     
     while intro:
         for event in pygame.event.get():
-            print(event) #I used this to show mouse events 
+            #print(event) #I used this to show mouse events 
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -86,6 +86,7 @@ def intro(gameDisplay, clock):
         pygame.display.flip()
         
         if button(gameDisplay, "START", 150,450,100,50,BRIGHT_GREEN, GREEN):
+            print('start!')
             intro = False
           
         if button(gameDisplay, "QUIT", 550,450,100,50, BRIGHT_RED, RED):
@@ -93,7 +94,7 @@ def intro(gameDisplay, clock):
         
 
 
-        pygame.display.update()
+        pygame.display.flip()
         clock.tick(30)
 
 def pause(gameDisplay):
@@ -163,6 +164,11 @@ def minusHealth( screen, spritelist,player):
         #subtracts 1 health from player
         setHealth(health-1)
         screen.blit(health_pics[health],(10,10))
+        if health < 0:
+            setHealth(0)
     if (health == 0):
-        player.kill()
+        print('dead. X_X')
+        #player.kill()
+        return False
+        setHealth(30)
 

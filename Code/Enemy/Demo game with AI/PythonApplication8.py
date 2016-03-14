@@ -497,9 +497,10 @@ def main():
         #Minus Health
         #player.minusHealth(screen, click)
  
+        if minusHealth(screen, active_sprite_list, player) == False:
+            main()
         # Limit to 60 frames per second
         clock.tick(60)
- 
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
         #pygame.display.update()
