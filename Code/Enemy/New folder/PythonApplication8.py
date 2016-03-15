@@ -323,8 +323,8 @@ class Level_01(Level):
  
     def __init__(self, player):
         """ Create level 1. """
-        numGen = random.randint(1,3)
-
+        numGen1 = random.randint(1,3)
+        numGen2 = random.randint(1,3)
 
         # Call the parent constructor
         Level.__init__(self, player)
@@ -335,19 +335,18 @@ class Level_01(Level):
         self.background.set_colorkey(WHITE)
  
         # Array with width, height, x, and y of platform
-        if numGen == 1:
+        if numGen1 == 1:
             # Boxes number top to bottom, left to right
-            level = [
+            level1 = [
                     [50, 50, 2, 600, 450],# Cargo #1
                     [50, 50, 1, 700, 450],# Cargo #2
                     [300, 100, 4, 500, 500], # Crate #1
                     [50, 50, 1, 450, 550] # Cargo #3
                     ]
-            self.levellist = level
 
-        elif numGen == 2:
+        elif numGen1 == 2:
             # Boxes number top to bottom, left to right
-            level = [[50, 50, 2, 250, 500],# Box #1
+            level1 = [[50, 50, 2, 250, 500],# Box #1
                      [50, 50, 1, 350, 500],# Box #2
                      [50, 50, 2, 150, 550],# Box #3
                      [50, 50, 1, 250, 550],# Box #4
@@ -355,22 +354,81 @@ class Level_01(Level):
                      [50, 50, 3, 350, 550],# Box #6
                      [50, 50, 3, 450, 550]# Box #7
                     ]
-            self.levellist = level
-
-        elif numGen == 3:
+        elif numGen1 == 3:
             # Boxes number top to bottom, left to right
-            level = [
+            level1 = [
                      [50, 50, 2, 600, 450], # Box #1
                      [100, 300, 4, 650, 400],# Cargo #1
                      [50, 50, 1, 250, 550], # Box #2
                      [50, 50, 1, 350, 550], # Box #3
                      [50, 50, 1, 450, 550], # Box #4
-                     [100, 300, 5, 500, 500]# Cargo #2
+                     [100, 300, 5, 500, 500],# Cargo #2
+                     [300, 100, 6, 800, 500]
                     ]
-            self.levellist = level
+        if numGen2 == 1:
+            level2 = [
+                     [50, 50, 1, 1100, 550],
+                     [300, 100, 4, 1150, 500],
+                     [300, 100, 6, 1450, 500],
+                     [50, 50, 2, 1200, 450],
+                     [300, 100, 7, 1250, 400],
+                     [50, 50, 3, 1400, 350],
+                     [50, 50, 2, 1500, 350], 
+                     ]
+        elif numGen2 == 2:
+            level2 = [
+                     [300, 100, 4, 1200, 450],
+                     [50, 50, 1, 1125, 500],
+                     [50, 50, 2, 1125, 550],
+                     [50, 50, 3, 1200, 550],
+                     [50, 50, 3, 1325, 550],
+                     [50, 50, 3, 1450, 550],
+                     [50, 50, 2, 1325, 400]           
+
+                     ]
+        elif numGen2 == 3:
+            level2 = [
+                     [50, 50, 2, 1300, 550],
+                     [300, 100, 5, 1350, 500],
+                     [50, 50, 3, 1400, 450],
+                     [300, 100, 6, 1450, 400],
+                     [50, 50, 2, 1800, 450],
+                     [300, 100, 4, 1800, 500],
+                     [50, 50, 2, 2100, 550]
+                     ]
+        if numGen2 != 3:
+            level3 = [
+                     [300,100, 5, 2400, 500],
+                     [300,100, 4, 2400, 400],
+                     [300,100, 6, 2400, 300],
+                     [300,100, 7, 2400, 200],
+                     [300,100, 5, 2400, 100],
+                     [300,100, 6, 2400, 0],
+                     ]
+        else:
+            level3 = [
+                     [300,100, 5, 2700, 500],
+                     [300,100, 4, 2700, 400],
+                     [300,100, 6, 2700, 300],
+                     [300,100, 7, 2700, 200],
+                     [300,100, 5, 2700, 100],
+                     [300,100, 6, 2700, 0],
+                     ]
  
         # Go through the array above and add platforms
-        for platform in level:
+        for platform in level1:
+            block = Platform(platform[0], platform[1], platform[2])
+            block.rect.x = platform[3]
+            block.rect.y = platform[4]
+            block.player = self.player
+            self.platform_list.add(block)
+        for platform in level2:
+            block = Platform(platform[0], platform[1], platform[2])
+            block.rect.x = platform[3]
+            block.rect.y = platform[4]
+            block.player = self.player
+            self.platform_list.add(block)
+        for platform in level3:
             block = Platform(platform[0], platform[1], platform[2])
             block.rect.x = platform[3]
             block.rect.y = platform[4]
