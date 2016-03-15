@@ -78,31 +78,6 @@ class Player(pygame.sprite.Sprite):
  
         # List of sprites we can bump against
         self.level = None
-
-        #sets health amount
-        global health
-        health = 30
-
-        #loads the health images
-        global health_pics
-        health_pics = []
-        for i in range(health + 1):
-            health_pics.append(pygame.image.load('health' + str(i) + '.png'))
-
-    def setHealth(self, int):
-        health = int
-
-    def getHealth():
-        return health
-
-    def minusHealth(self, screen, mouse):
-    #subtracts 1 health from player
-            #if player is hit by enemy
-        mouse = pygame.mouse.get_pressed()
-        if (mouse[0] == 1):
-            #subtracts 1 health from player
-            self.setHealth(health-1)
-            screen.blit(health_pics[health],(10,10))
           
 
     def update(self):
@@ -702,6 +677,7 @@ def main():
     #Mouse, used to detect events
     click = pygame.mouse.get_pressed()
 
+
     #call title screen
     intro(screen, clock) 
 
@@ -715,9 +691,10 @@ def main():
     TimetoKillPlayer = 0
     BossKill = 0
     while not done:
-        if TimetoKillPlayer == 15 or BossKill == 5:
+        if TimetoKillPlayer == 30 or BossKill == 5:
                 active_sprite_list.remove(TimetoKillPlayer)
-                pygame.quit()
+                main()
+                #pygame.quit()
         else:       
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -805,6 +782,7 @@ def main():
                     active_sprite_list.remove(bullet)
                     BossKill += 1
                     print(BossKill)
+                    #Score(screen,SCREEN_WIDTH,SCREEN_HEIGHT,1000)
 
                 for i in listofmobs:
                     if bullet.rect.x in range(i.rect.x-1,i.rect.x+5) and bullet.rect.y in range(i.rect.y,i.rect.y+50):
@@ -812,10 +790,13 @@ def main():
                        bullet_list.remove(bullet)
                        active_sprite_list.remove(bullet)
                        active_sprite_list.remove(i)
-                       listofmobs.remove(i) 
+                       listofmobs.remove(i)
+                       
+                       #print (str(score))
+                       #Score(screen,SCREEN_WIDTH,SCREEN_HEIGHT,100)
                 #end bullet for player
 
-
+                setScore(score + 100)
             for i in listofmobs:
                 i.patrol1(screen,player,jumpl,counter, items, bullet_list1, active_sprite_list,screen,shot1)
                 if i.movement == 'right':
@@ -891,7 +872,8 @@ def main():
             # Draw everything
             current_level.draw(screen)
             active_sprite_list.draw(screen)
-            screen.blit(health_pics[health], (10,10))
+            drawHealth(screen)
+            Score(screen, SCREEN_WIDTH, SCREEN_HEIGHT)
             #listofmobs[0].sight(screen)
             
  

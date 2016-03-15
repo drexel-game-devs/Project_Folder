@@ -24,6 +24,18 @@ BRIGHT_RED = (255,0,0)
 largeText = pygame.font.Font('freesansbold.ttf', 85)
 smallText = pygame.font.Font('freesansbold.ttf', 20)
 
+#score
+score = 0
+
+#sets health amount
+health = 30
+
+#loads the health images
+global health_pics
+health_pics = []
+for i in range(health + 1):
+    health_pics.append(pygame.image.load('health' + str(i) + '.png'))
+
 #gameDisplay = pygame.display.set_mode((display_width,display_height))
 #pygame.display.set_caption('Title')
 #clock = pygame.time.Clock()
@@ -117,5 +129,44 @@ def pause(gameDisplay):
         clock.tick(30)
     return
 
+def setScore(int):
+    global score
+    score = int
 
+def Score(display, display_width, display_height):
+    width = (display_width / 2) + 50
+    height = 10
+    #click = pygame.mouse.get_pressed()
+    label = smallText.render('SCORE', True, WHITE)
+    display.blit(label, (width, height))
+    value = smallText.render(str(score), True, WHITE)
+    display.blit(value, (width + 15, height + 20))
+    #pygame.display.update()
 
+def setHealth(int):
+    global health
+    health = int
+
+def getHealth():
+    return health
+
+def drawHealth(screen):
+    screen.blit(health_pics[health], (10,10))
+
+def minusHealth( screen, spritelist,player_rect):
+#subtracts 1 health from player
+    setHealth(health-1)
+    mouse = pygame.mouse.get_pressed()
+    if (mouse[0] == 1 or player_rect == True):
+        print('hit')
+        #subtracts 1 health from player
+        setHealth(health-1)
+        screen.blit(health_pics[health],(10,10))
+        if health < 0:
+            setHealth(0)
+    if (health == 0):
+        print('dead. X_X')
+        #player.kill()
+        setHealth(30)
+        setScore(0)
+        return False
