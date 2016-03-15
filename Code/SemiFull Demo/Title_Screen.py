@@ -72,7 +72,7 @@ def intro(gameDisplay, clock):
     
     while intro:
         for event in pygame.event.get():
-            #print(event) #I used this to show mouse events 
+            print(event) #I used this to show mouse events 
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -86,7 +86,6 @@ def intro(gameDisplay, clock):
         pygame.display.flip()
         
         if button(gameDisplay, "START", 150,450,100,50,BRIGHT_GREEN, GREEN):
-            print('start!')
             intro = False
           
         if button(gameDisplay, "QUIT", 550,450,100,50, BRIGHT_RED, RED):
@@ -94,7 +93,7 @@ def intro(gameDisplay, clock):
         
 
 
-        pygame.display.flip()
+        pygame.display.update()
         clock.tick(30)
 
 def pause(gameDisplay):
@@ -134,16 +133,14 @@ def setScore(int):
     global score
     score = int
 
-def Score(display, display_width, display_height, spritelist):
+def Score(display, display_width, display_height):
     width = (display_width / 2) + 50
     height = 10
-    click = pygame.mouse.get_pressed()
+    #click = pygame.mouse.get_pressed()
     label = smallText.render('SCORE', True, WHITE)
     display.blit(label, (width, height))
     value = smallText.render(str(score), True, WHITE)
     display.blit(value, (width + 15, height + 20))
-    if click[0] == 1:
-        setScore(score + 5)
     #pygame.display.update()
 
 def setHealth(int):
@@ -156,22 +153,21 @@ def getHealth():
 def drawHealth(screen):
     screen.blit(health_pics[health], (10,10))
 
-def minusHealth( screen, spritelist,player_rect):
+def minusHealth( screen):
 #subtracts 1 health from player
-        #if player is hit by enemy
-    mouse = pygame.mouse.get_pressed()
-    if (mouse[0] == 1 or player_rect == True):
+    setHealth(health-5)
+    screen.blit(health_pics[health],(10,10))
+    if health < 0:
+        setHealth(0)
+    #mouse = pygame.mouse.get_pressed()
+    """if (mouse[0] == 1 or player_rect == True):
         print('hit')
         #subtracts 1 health from player
         setHealth(health-1)
-        screen.blit(health_pics[health],(10,10))
-        if health < 0:
-            setHealth(0)
+        """
     if (health == 0):
         print('dead. X_X')
         #player.kill()
         setHealth(30)
         setScore(0)
         return False
-        
-

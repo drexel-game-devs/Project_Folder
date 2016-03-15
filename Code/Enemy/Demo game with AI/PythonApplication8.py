@@ -352,6 +352,33 @@ class Level_01(Level):
 
     def returnlevel(self):
         return self.levellist
+
+def winGame(display):
+    winclock = pygame.time.Clock()
+    largetext = pygame.font.Font('freesansbold.ttf', 85)
+    hugetext = pygame.font.Font('freesansbold.ttf', 125)
+    smalltext = pygame.font.Font('freesansbold.ttf', 35)
+    
+    label1 = largetext.render("BOSS DEFEATED", 1, WHITE)
+    label2 = hugetext.render("You Win!", 1, GREEN)
+    label3 = smalltext.render("Press spacebar to exit", 1, red_c)
+    
+    done = False
+    while not done:
+        display.blit(label1, (40, 100))
+        display.blit(label2, (141, 275))
+        display.blit(label3, (200, 460))
+        pygame.display.flip()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    done = True
+        winclock.tick(60)
+
+        
  
  
 def main():
@@ -432,6 +459,9 @@ def main():
                 if event.key == pygame.K_UP:
                     jumpl = player.rect.x
                     player.jump()
+                if event.key == pygame.K_w:
+                    winGame(screen)
+                    done = True
 
                 #if the space key is hit, fire a shot
                 if event.key == pygame.K_SPACE:
@@ -487,17 +517,23 @@ def main():
         # If the player gets near the left side, shift the world right (+x)
         if player.rect.left < 0:
             player.rect.left = 0
+        
+        if boss1.alive == False:
+            winGame(screen)
+            done = True
 
         # Draw everything
         current_level.draw(screen)
         active_sprite_list.draw(screen)
-        Score(screen,SCREEN_HEIGHT,SCREEN_WIDTH)
+        Score(screen,SCREEN_HEIGHT,SCREEN_WIDTH, active_sprite_list)
         drawHealth(screen)
-        minusHealth(screen, active_sprite_list, player)
+        minusHealth(screen, active_sprite_list, player.rect.colliderect(mob1))
         #Minus Health
         #player.minusHealth(screen, click)
  
-        if minusHealth(screen, active_sprite_list, player) == False:
+        #minusHealth now returns False if player is killed, and calls the main loop again.
+        if minusHealth(screen, active_sprite_list, player.rect.colliderect(mob1)) == False:
+            print('restart')
             main()
         # Limit to 60 frames per second
         clock.tick(60)
