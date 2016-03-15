@@ -110,7 +110,9 @@ def pause(gameDisplay):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
         
         gameDisplay.blit(pauseScreen, (0,0))
         gameDisplay.blit(resume, (150,500))

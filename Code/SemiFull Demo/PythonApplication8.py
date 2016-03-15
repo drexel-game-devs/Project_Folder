@@ -605,7 +605,7 @@ def winGame(display):
     
     label1 = largetext.render("BOSS DEFEATED", 1, WHITE)
     label2 = hugetext.render("You Win!", 1, GREEN)
-    label3 = smalltext.render("Press spacebar to exit", 1, red_c)
+    label3 = smalltext.render("Press Esc to exit", 1, red_c)
     
     done = False
     while not done:
@@ -618,7 +618,7 @@ def winGame(display):
             if event.type == pygame.QUIT:
                 done = True
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_ESCAPE:
                     done = True
         winclock.tick(60)
     #pygame.quit() 
@@ -631,7 +631,7 @@ def loseGame(display):
     
     label1 = largetext.render("YOU DIED", 1, WHITE)
     label2 = hugetext.render("You Lose!", 1, GREEN)
-    label3 = smalltext.render("Press spacebar to exit.", 1, red_c)
+    label3 = smalltext.render("Press Esc to exit.", 1, red_c)
     
     done = False
     while not done:
@@ -644,7 +644,7 @@ def loseGame(display):
             if event.type == pygame.QUIT:
                 done = True
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_ESCAPE:
                     done = True
         loseclock.tick(60)
     #pygame.quit()         
@@ -753,6 +753,8 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
                         pause(screen)
+                    if event.key == pygame.K_ESCAPE:
+                        done = True
                     if event.key == pygame.K_LEFT:
                         player.go_left()
                     if event.key == pygame.K_RIGHT:
