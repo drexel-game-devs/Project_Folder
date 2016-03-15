@@ -134,7 +134,7 @@ def setScore(int):
     global score
     score = int
 
-def Score(display, display_width, display_height):
+def Score(display, display_width, display_height, spritelist):
     width = (display_width / 2) + 50
     height = 10
     click = pygame.mouse.get_pressed()
@@ -169,6 +169,8 @@ def minusHealth( screen, spritelist,player):
     if (health == 0):
         print('dead. X_X')
         #player.kill()
-        return False
         setHealth(30)
+        setScore(0)
+        return False
+        
 

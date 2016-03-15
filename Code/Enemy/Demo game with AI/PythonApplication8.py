@@ -532,6 +532,7 @@ def main():
         #player.minusHealth(screen, click)
  
         if minusHealth(screen, active_sprite_list, player) == False:
+            print('restart')
             main()
         # Limit to 60 frames per second
         clock.tick(60)
