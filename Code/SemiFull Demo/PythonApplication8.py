@@ -740,6 +740,9 @@ def main():
     shot1 = 'false'
     TimetoKillPlayer = 0
     BossKill = 0
+    #using this to monitor kills
+    #kill = False
+
     while not done:
         if TimetoKillPlayer == 30 or BossKill == 5:
                 active_sprite_list.remove(TimetoKillPlayer)
@@ -801,6 +804,10 @@ def main():
                     if bullet.rect.x in range(player.rect.x-1, player.rect.x+20) and bullet.rect.y in range(player.rect.y-10,player.rect.y+40):
                         TimetoKillPlayer += 1
                         print(TimetoKillPlayer)
+                        minusHealth(screen)
+                        if minusHealth(screen) == False:
+                            loseGame(screen)
+                            done = True  
 
             # Update all sprites
               
@@ -837,20 +844,20 @@ def main():
                     active_sprite_list.remove(bullet)
                     BossKill += 1
                     print(BossKill)
-                    if BossKill == 5:
-                        boss1.kill
+                    if BossKill >= 5:
                         boss1.alive = False
+                        addScore(1000)
+                        boss1.kill()
                     #Score(screen,SCREEN_WIDTH,SCREEN_HEIGHT,1000)
 
                 for i in listofmobs:
                     if bullet.rect.x in range(i.rect.x-1,i.rect.x+5) and bullet.rect.y in range(i.rect.y,i.rect.y+50):
                        print('hit')
-                       setScore(score + 100)
                        bullet_list.remove(bullet)
                        active_sprite_list.remove(bullet)
                        active_sprite_list.remove(i)
                        listofmobs.remove(i)
-                       
+                       addScore(100)
                        #print (str(score))
                        #Score(screen,SCREEN_WIDTH,SCREEN_HEIGHT,100)
                 #end bullet for player

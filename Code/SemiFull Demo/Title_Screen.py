@@ -131,9 +131,9 @@ def pause(gameDisplay):
         clock.tick(30)
     return
 
-def setScore(int):
+def addScore(int):
     global score
-    score = int
+    score += int
 
 def Score(display, display_width, display_height):
     width = (display_width / 2) + 50
@@ -143,7 +143,8 @@ def Score(display, display_width, display_height):
     display.blit(label, (width, height))
     value = smallText.render(str(score), True, WHITE)
     display.blit(value, (width + 15, height + 20))
-    #pygame.display.update()
+
+    #pygame.display.flip()
 
 def setHealth(int):
     global health
@@ -170,6 +171,6 @@ def minusHealth( screen):
     if (health == 0):
         print('dead. X_X')
         #player.kill()
-        setHealth(30)
-        setScore(0)
+        #setHealth(30)
+        #setScore(0)
         return False
