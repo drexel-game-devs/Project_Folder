@@ -17,6 +17,8 @@ class boss(pygame.sprite.Sprite):
 
         #Direction player is facing. Defaults to Right
         self.direction = 'R'
+        self.alive = True
+        self.health = 100
         self.vert = 'D'
         
         #Get a list of images for animation
@@ -54,6 +56,10 @@ class boss(pygame.sprite.Sprite):
         # List of sprites we can bump against
         self.level = None
     def update(self):
+
+        if self.health <= 0:
+            self.alive = false
+
         self.calc_grav()
         # Move left/right
         self.rect.x += self.change_x

@@ -268,7 +268,7 @@ class Level(object):
         """ Draw everything on this level. """
  
         # Draw the background
-        screen.fill(WHITE)
+        #screen.fill(WHITE)
 
         screen.blit(self.background, (self.world_shift // 3,0))
 
@@ -597,7 +597,57 @@ class BulletBoss(pygame.sprite.Sprite):
   
             self.rect.x += self.vel
 
-                 
+def winGame(display):
+    winclock = pygame.time.Clock()
+    largetext = pygame.font.Font('freesansbold.ttf', 85)
+    hugetext = pygame.font.Font('freesansbold.ttf', 125)
+    smalltext = pygame.font.Font('freesansbold.ttf', 35)
+    
+    label1 = largetext.render("BOSS DEFEATED", 1, WHITE)
+    label2 = hugetext.render("You Win!", 1, GREEN)
+    label3 = smalltext.render("Press spacebar to exit", 1, red_c)
+    
+    done = False
+    while not done:
+        display.blit(label1, (40, 100))
+        display.blit(label2, (141, 275))
+        display.blit(label3, (200, 460))
+        pygame.display.flip()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    done = True
+        winclock.tick(60)
+    #pygame.quit() 
+
+def loseGame(display):
+    loseclock = pygame.time.Clock()
+    largetext = pygame.font.Font('freesansbold.ttf', 85)
+    hugetext = pygame.font.Font('freesansbold.ttf', 125)
+    smalltext = pygame.font.Font('freesansbold.ttf', 35)
+    
+    label1 = largetext.render("YOU DIED", 1, WHITE)
+    label2 = hugetext.render("You Lose!", 1, GREEN)
+    label3 = smalltext.render("Press spacebar to exit.", 1, red_c)
+    
+    done = False
+    while not done:
+        display.blit(label1, (40, 100))
+        display.blit(label2, (141, 275))
+        display.blit(label3, (200, 460))
+        pygame.display.flip()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    done = True
+        loseclock.tick(60)
+    #pygame.quit()         
 
 def main():
     
@@ -710,6 +760,9 @@ def main():
                     if event.key == pygame.K_UP:
                         jumpl = player.rect.x
                         player.jump()
+                    if event.key == pygame.K_w:
+                        winGame(screen)
+                        done = True
 
                     #if the space key is hit, fire a shot
                     if event.key == pygame.K_SPACE:
@@ -782,11 +835,15 @@ def main():
                     active_sprite_list.remove(bullet)
                     BossKill += 1
                     print(BossKill)
+                    if BossKill == 5:
+                        boss1.kill
+                        boss1.alive = False
                     #Score(screen,SCREEN_WIDTH,SCREEN_HEIGHT,1000)
 
                 for i in listofmobs:
                     if bullet.rect.x in range(i.rect.x-1,i.rect.x+5) and bullet.rect.y in range(i.rect.y,i.rect.y+50):
                        print('hit')
+                       setScore(score + 100)
                        bullet_list.remove(bullet)
                        active_sprite_list.remove(bullet)
                        active_sprite_list.remove(i)
@@ -796,7 +853,6 @@ def main():
                        #Score(screen,SCREEN_WIDTH,SCREEN_HEIGHT,100)
                 #end bullet for player
 
-                setScore(score + 100)
             for i in listofmobs:
                 i.patrol1(screen,player,jumpl,counter, items, bullet_list1, active_sprite_list,screen,shot1)
                 if i.movement == 'right':
@@ -826,7 +882,11 @@ def main():
                                     bullet_list1.remove(bullet1)
                                     active_sprite_list.remove(bullet1)
                                     TimetoKillPlayer += 1                                   
-                                    print(TimetoKillPlayer)                                                                       
+                                    print(TimetoKillPlayer)
+                                    minusHealth(screen)
+                                    if minusHealth(screen) == False:
+                                        loseGame(screen)
+                                        done = True                                                                       
                 elif i.movement == 'left':
                     #set when to start shoting
                     if player.rect.x in range(i.rect.x - 400, i.rect.x+30) and (player.rect.y in range(i.rect.y-40, i.rect.y + 130) or newcor in range(i.rect.y-60, i.rect.y + 140)):
@@ -853,6 +913,10 @@ def main():
                                     active_sprite_list.remove(bullet1)
                                     TimetoKillPlayer += 1
                                     print(TimetoKillPlayer)
+                                    minusHealth(screen)
+                                    if minusHealth(screen) == False:
+                                        loseGame(screen)
+                                        done = True    
             
             
  
@@ -867,7 +931,9 @@ def main():
             if player.rect.left < 0:
                 player.rect.left = 0
  
-
+            if boss1.alive == False:
+                winGame(screen)
+                done = True
 
             # Draw everything
             current_level.draw(screen)
