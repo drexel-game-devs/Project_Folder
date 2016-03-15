@@ -525,13 +525,14 @@ def main():
         # Draw everything
         current_level.draw(screen)
         active_sprite_list.draw(screen)
-        Score(screen,SCREEN_HEIGHT,SCREEN_WIDTH)
+        Score(screen,SCREEN_HEIGHT,SCREEN_WIDTH, active_sprite_list)
         drawHealth(screen)
-        minusHealth(screen, active_sprite_list, player)
+        minusHealth(screen, active_sprite_list, player.rect.colliderect(mob1))
         #Minus Health
         #player.minusHealth(screen, click)
  
-        if minusHealth(screen, active_sprite_list, player) == False:
+        #minusHealth now returns False if player is killed, and calls the main loop again.
+        if minusHealth(screen, active_sprite_list, player.rect.colliderect(mob1)) == False:
             print('restart')
             main()
         # Limit to 60 frames per second

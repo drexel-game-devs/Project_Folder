@@ -156,11 +156,12 @@ def getHealth():
 def drawHealth(screen):
     screen.blit(health_pics[health], (10,10))
 
-def minusHealth( screen, spritelist,player):
+def minusHealth( screen, spritelist,player_rect):
 #subtracts 1 health from player
         #if player is hit by enemy
     mouse = pygame.mouse.get_pressed()
-    if (mouse[0] == 1):
+    if (mouse[0] == 1 or player_rect == True):
+        print('hit')
         #subtracts 1 health from player
         setHealth(health-1)
         screen.blit(health_pics[health],(10,10))
