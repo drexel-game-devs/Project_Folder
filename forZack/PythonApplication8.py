@@ -899,7 +899,8 @@ def main(TimetoKillPlayer):
                        active_sprite_list.remove(i)
                        listofmobs.remove(i)
                        
-                    
+            # need to put set score function whenever a mod is killed
+            #need to put minus health function + game Lose function whenever a bullet hits the player
                        #Score(screen,SCREEN_WIDTH,SCREEN_HEIGHT,100)
                 #end bullet for player
             for i in listofmobs:
@@ -981,7 +982,8 @@ def main(TimetoKillPlayer):
             # If the player gets near the left side, shift the world right (+x)
             if player.rect.left < 0:
                 player.rect.left = 0
- 
+            
+                # shouldn't this be boss1?
             if lob[0].alive == False:
                 winGame(screen)
                 done = True
