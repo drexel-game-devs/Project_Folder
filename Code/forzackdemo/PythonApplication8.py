@@ -12,6 +12,7 @@ from class1 import *
 listofmobs = []
 lob = []
 TimetoKillPlayer = 0
+done = False
 
 
 # Colors
@@ -64,6 +65,7 @@ class Player(pygame.sprite.Sprite):
         self.right_frames.append(image)
         image = pygame.image.load("main_walk_3.png")
         self.right_frames.append(image)
+        self.distance = 0 #Total distance traveled, used to determine which frame to display.
 
         #create the right frames by flipping the left frames
         for image in range(len(self.right_frames)):
@@ -96,12 +98,14 @@ class Player(pygame.sprite.Sprite):
         #Grab the players position
         pos = self.rect.x
 
+        self.distance += abs(self.change_x)
+
         #Update the image loaded
         if self.direction == "R":
-            frame = (pos // 30) % len(self.right_frames)
+            frame = (self.distance // 30) % len(self.right_frames)
             self.image = self.right_frames[frame]
         else:
-            frame = (pos // 30) % len(self.left_frames)
+            frame = (self.distance // 30) % len(self.left_frames)
             self.image = self.left_frames[frame]
 
         # See if we hit anything
@@ -164,12 +168,12 @@ class Player(pygame.sprite.Sprite):
     # Player-controlled movement:
     def go_left(self):
         """ Called when the user hits the left arrow. """
-        self.change_x = -4
+        self.change_x = -6
         self.direction = "L"
  
     def go_right(self):
         """ Called when the user hits the right arrow. """
-        self.change_x = 4
+        self.change_x = 6
         self.direction = "R"
  
     def stop(self):
@@ -307,10 +311,12 @@ class Level_01(Level):
  
     def __init__(self, player):
         """ Create level 1. """
-        numGen1 = random.randint(1,3)
+        #numGen1 = random.randint(1,3)
+        numGen1 = 3
         numGen2 = random.randint(1,3)
 
         self.levellist = []
+        
 
 
         # Call the parent constructor
@@ -462,23 +468,16 @@ class BulletBoss2(pygame.sprite.Sprite):
     #Call superclass constructor, will take a player reference
     def __init__(self, player, bullet_list, sprite_list, screen,enemy,TimetoKillPlayer):
         super().__init__()
-
         #playe reference
         self.player = player
         self.enemy = enemy
-
         #x and y coords
         self.x = player.rect.x + 50
-        self.y = player.rect.y + 50
-        
-       
-      
-        self.vel = 10
-
-     
+        self.y = player.rect.y + 100                  
+        self.vel = 7    
         self.screen = screen
         #create shot image and shot rectangle
-        self.image = pygame.Surface([9, 3])
+        self.image = pygame.Surface([5, 5])
         self.image.fill(red_c)
         self.rect = self.image.get_rect()
         self.rect.x = self.x
@@ -486,50 +485,59 @@ class BulletBoss2(pygame.sprite.Sprite):
         #add bullets to both groups
         self.bullet_list = bullet_list
         self.sprite_list = sprite_list
-        self.TimetoKillPlayer = TimetoKillPlayer
         bullet_list.add(self)
         sprite_list.add(self)
+        self.dec = 0
     #update will move the bullet
     def update(self):
         #self.rect.x += self.vel
         #self.rect.y += self.Vvel
         #right down
         global TimetoKillPlayer
-        if(self.enemy.rect.x > self.rect.x and self.enemy.rect.y > self.rect.y):                  
+        global done
+        if(self.enemy.rect.x+15 > self.rect.x and self.enemy.rect.y+30 > self.rect.y):                  
             self.rect.x += self.vel
             self.rect.y += self.vel
         #left down
-        elif(self.enemy.rect.x < self.rect.x and self.enemy.rect.y > self.rect.y):        
+        elif(self.enemy.rect.x+15 < self.rect.x and self.enemy.rect.y+30 > self.rect.y):        
             self.rect.x -= self.vel
             self.rect.y += self.vel
         #right up
-        elif(self.enemy.rect.x > self.rect.x and self.enemy.rect.y < self.rect.y):          
+        elif(self.enemy.rect.x+15 > self.rect.x and self.enemy.rect.y+30 < self.rect.y):          
             self.rect.x += self.vel
             self.rect.y -= self.vel
         #left up
-        elif(self.enemy.rect.x < self.rect.x and self.enemy.rect.y < self.rect.y):         
+        elif(self.enemy.rect.x+15 < self.rect.x and self.enemy.rect.y+30 < self.rect.y):         
             self.rect.x -= self.vel
             self.rect.y -= self.vel
         #down
-        elif(self.enemy.rect.x == self.rect.x and self.enemy.rect.y > self.rect.y):        
+        elif(self.enemy.rect.x+15 == self.rect.x and self.enemy.rect.y+30 > self.rect.y):        
             self.rect.y += self.vel
         #up
-        elif(self.enemy.rect.x == self.rect.x and self.enemy.rect.y < self.rect.y):       
+        elif(self.enemy.rect.x+15 == self.rect.x and self.enemy.rect.y+30 < self.rect.y):       
             self.rect.y -= self.vel
         #right
-        elif(self.enemy.rect.x > self.rect.x and self.enemy.rect.y == self.rect.y):            
+        elif(self.enemy.rect.x+15 > self.rect.x and self.enemy.rect.y+30 == self.rect.y):            
             self.rect.x += self.vel
         #left
-        elif(self.enemy.rect.x < self.rect.x and self.enemy.rect.y == self.rect.y):  
+        elif(self.enemy.rect.x+15 < self.rect.x and self.enemy.rect.y+30 == self.rect.y):  
             self.rect.x -= self.vel
         if self.rect.x < 0 or self.rect.x > SCREEN_WIDTH + 1:
             self.bullet_list.remove(self)
             self.sprite_list.remove(self)
-        if self.rect.x in range(self.enemy.rect.x-1, self.enemy.rect.x+20) and self.rect.y in range(self.enemy.rect.y-10,self.enemy.rect.y+40):
+        if self.rect.x in range(self.enemy.rect.x, self.enemy.rect.x+15) and self.rect.y in range(self.enemy.rect.y,self.enemy.rect.y+30):
             self.bullet_list.remove(self)
             self.sprite_list.remove(self)
             TimetoKillPlayer +=1
-            print(TimetoKillPlayer)     
+            
+            if TimetoKillPlayer % 1 == 0:
+                print(TimetoKillPlayer)
+                minusHealth(self.screen)
+                if minusHealth(self.screen) == False:
+                    loseGame(self.screen)
+                    done = True
+                
+               
 
 class BulletBoss(pygame.sprite.Sprite):
 
@@ -549,11 +557,11 @@ class BulletBoss(pygame.sprite.Sprite):
         self.y = player.rect.y + 50
         
        
-        self.vel = 10
+        self.vel = 7
       
 
         #create shot image and shot rectangle
-        self.image = pygame.Surface([9, 3])
+        self.image = pygame.Surface([5, 5])
         self.image.fill(red_c)
         self.rect = self.image.get_rect()
         self.rect.x = self.x
@@ -564,47 +572,54 @@ class BulletBoss(pygame.sprite.Sprite):
        
         bullet_list.add(self)
         sprite_list.add(self)
+        self.dec = 0
     #update will move the bullet
     def update(self):
         global TimetoKillPlayer
-      #self.rect.x += self.vel
-        #self.rect.y += self.Vvel
-        #right down
-        if(self.enemy.rect.x > self.rect.x and self.enemy.rect.y > self.rect.y):                  
+        global done
+        if(self.enemy.rect.x+15 > self.rect.x and self.enemy.rect.y+30 > self.rect.y):                  
             self.rect.x += self.vel
             self.rect.y += self.vel
         #left down
-        elif(self.enemy.rect.x < self.rect.x and self.enemy.rect.y > self.rect.y):        
+        elif(self.enemy.rect.x+15 < self.rect.x and self.enemy.rect.y+30 > self.rect.y):        
             self.rect.x -= self.vel
             self.rect.y += self.vel
         #right up
-        elif(self.enemy.rect.x > self.rect.x and self.enemy.rect.y < self.rect.y):          
+        elif(self.enemy.rect.x+15 > self.rect.x and self.enemy.rect.y+30 < self.rect.y):          
             self.rect.x += self.vel
             self.rect.y -= self.vel
         #left up
-        elif(self.enemy.rect.x < self.rect.x and self.enemy.rect.y < self.rect.y):         
+        elif(self.enemy.rect.x+15 < self.rect.x and self.enemy.rect.y+30 < self.rect.y):         
             self.rect.x -= self.vel
             self.rect.y -= self.vel
         #down
-        elif(self.enemy.rect.x == self.rect.x and self.enemy.rect.y > self.rect.y):        
+        elif(self.enemy.rect.x+15 == self.rect.x and self.enemy.rect.y+30 > self.rect.y):        
             self.rect.y += self.vel
         #up
-        elif(self.enemy.rect.x == self.rect.x and self.enemy.rect.y < self.rect.y):       
+        elif(self.enemy.rect.x+15 == self.rect.x and self.enemy.rect.y+30 < self.rect.y):       
             self.rect.y -= self.vel
         #right
-        elif(self.enemy.rect.x > self.rect.x and self.enemy.rect.y == self.rect.y):            
+        elif(self.enemy.rect.x+15 > self.rect.x and self.enemy.rect.y+30 == self.rect.y):            
             self.rect.x += self.vel
         #left
-        elif(self.enemy.rect.x < self.rect.x and self.enemy.rect.y == self.rect.y):  
+        elif(self.enemy.rect.x+15 < self.rect.x and self.enemy.rect.y+30 == self.rect.y):  
             self.rect.x -= self.vel
         if self.rect.x < 0 or self.rect.x > SCREEN_WIDTH + 1:
             self.bullet_list.remove(self)
             self.sprite_list.remove(self)
-        if self.rect.x in range(self.enemy.rect.x-1, self.enemy.rect.x+20) and self.rect.y in range(self.enemy.rect.y-10,self.enemy.rect.y+40):
+        if self.rect.x in range(self.enemy.rect.x, self.enemy.rect.x+15) and self.rect.y in range(self.enemy.rect.y,self.enemy.rect.y+30):
             self.bullet_list.remove(self)
             self.sprite_list.remove(self)
-            TimetoKillPlayer +=1
-            print(TimetoKillPlayer)
+            TimetoKillPlayer +=1             
+           
+            if TimetoKillPlayer % 1 == 0:
+                print(TimetoKillPlayer)
+                minusHealth(self.screen)
+                if minusHealth(self.screen) == False:
+                    loseGame(self.screen)
+                    done = True
+                
+          
   
 class mobBullet(pygame.sprite.Sprite):
     """ This class represents the bullet . """
@@ -621,21 +636,26 @@ class mobBullet(pygame.sprite.Sprite):
         self.active_list = active_list
         self.bul_list = bul_list
         self.screen = screen
+        self.dec = 0
  
     def update(self):
         """ Move the bullet. """
         self.rect.x += self.vel
         global TimetoKillPlayer
+        global done
         if self.rect.x in range(self.player.rect.x-10, self.player.rect.x+10) and self.rect.y in range(self.player.rect.y-2, self.player.rect.y+40):
             TimetoKillPlayer +=1
-            print(TimetoKillPlayer)
             self.active_list.remove(self) 
-            self.bul_list.remove(self)                      
-            minusHealth(self.screen)
-            if minusHealth(self.screen) == False:
-                loseGame(self.screen)
-                done = True           
-        #print(self.rect.x)
+            self.bul_list.remove(self)
+            if TimetoKillPlayer % 1 == 0:
+                print(TimetoKillPlayer)
+                minusHealth(self.screen)
+                if minusHealth(self.screen) == False:
+                    loseGame(self.screen)
+                    done = True   
+                      
+            
+               
 def winGame(display):
     winclock = pygame.time.Clock()
     largetext = pygame.font.Font('freesansbold.ttf', 85)
@@ -644,7 +664,7 @@ def winGame(display):
     
     label1 = largetext.render("BOSS DEFEATED", 1, WHITE)
     label2 = hugetext.render("You Win!", 1, GREEN)
-    label3 = smalltext.render("Press spacebar to exit", 1, red_c)
+    label3 = smalltext.render("Press Esc to exit", 1, red_c)
     
     done = False
     while not done:
@@ -657,7 +677,7 @@ def winGame(display):
             if event.type == pygame.QUIT:
                 done = True
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_ESCAPE:
                     done = True
         winclock.tick(60)
     #pygame.quit() 
@@ -670,7 +690,7 @@ def loseGame(display):
     
     label1 = largetext.render("YOU DIED", 1, WHITE)
     label2 = hugetext.render("You Lose!", 1, GREEN)
-    label3 = smalltext.render("Press spacebar to exit.", 1, red_c)
+    label3 = smalltext.render("Press Esc to exit.", 1, red_c)
     
     done = False
     while not done:
@@ -683,7 +703,7 @@ def loseGame(display):
             if event.type == pygame.QUIT:
                 done = True
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_ESCAPE:
                     done = True
         loseclock.tick(60)
     #pygame.quit()         
@@ -695,7 +715,9 @@ def lofb(listofbosses, level_list,current_level,active_sprite_list):
         level_list.append(Level_01(i))
         i.level = current_level
         active_sprite_list.add(i)
-def main(TimetoKillPlayer):
+def main():
+    global TimetoKillPlayer
+    global done  
    
     """ Main Program """
     pygame.init()
@@ -780,25 +802,18 @@ def main(TimetoKillPlayer):
 
     # -------- Main Program Loop -----------
     spawnmobs(listofmobs,level_list,current_level,active_sprite_list)
-    #spawnnew(listofmobs,level_list,current_level,active_sprite_list)
+    spawnnew(listofmobs,level_list,current_level,active_sprite_list)
     lofb(lob, level_list, current_level, active_sprite_list)
 
     items = current_level.returnlevel()
     shot1 = 'false'
     BossKill = 0
+    Teleport = 0
     
     while not done:
-        if TimetoKillPlayer >= 30 or BossKill == 5:
-                active_sprite_list.remove(TimetoKillPlayer)
-                for i in listofmobs:
-                    listofmobs.remove(i)
-                    active_sprite_list.remove(i)
-                for i in lob:
-                    lob.remove(i)
-                    active_sprite_list.remove(i)
-                main(TimetoKillPlayer)
-                #pygame.quit()
-        else:       
+         
+        
+        if 0 == 0:       
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
@@ -816,10 +831,14 @@ def main(TimetoKillPlayer):
                     if event.key == pygame.K_w:
                         winGame(screen)
                         done = True
+                    if event.key == pygame.K_ESCAPE:
+                        done = True
 
                     #if the space key is hit, fire a shot
                     if event.key == pygame.K_SPACE:
                         bullet = Bullet(player, bullet_list, active_sprite_list, screen)
+                        pygame.mixer.music.load("Laser Blasts-SoundBible.com-108608437.mp3")
+                        pygame.mixer.music.play(0,0.0)
  
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT and player.change_x < 0:
@@ -830,10 +849,21 @@ def main(TimetoKillPlayer):
         
             bint += 1
             #boss1.follow(player,items)
+            #boss bullet
+            Teleport += 1
+            
             for i in lob:
+                if Teleport == 350:
+                    pygame.mixer.music.load("150950__outroelison__teleport.mp3")
+                    pygame.mixer.music.play(0,0.0)
+                    Teleport = 0
+                    i.rect.x = 200
+                    i.rect.y = 200
                 i.follow(player,items)           
                 if bint % 60 == 0 and bint == 60:   
                     bint = 0
+                    pygame.mixer.music.load("11408^LASER1.mp3")
+                    pygame.mixer.music.play(0,0.0)
                     bossBullet = BulletBoss(i, bullet_list2, active_sprite_list, screen,player,TimetoKillPlayer)             
                     for bullet in bullet_list2:              
                         #see if a bullet hits a platform
@@ -843,6 +873,8 @@ def main(TimetoKillPlayer):
                             active_sprite_list.remove(bullet)
                         
                     bossBullet1 = BulletBoss2(i, bullet_list3, active_sprite_list, screen,player,TimetoKillPlayer)
+                    pygame.mixer.music.load("11408^LASER1.mp3")
+                    pygame.mixer.music.play(0,0.0)
                     for bullet in bullet_list2:             
                         #see if a bullet hits a platform
                         block_hit_list = pygame.sprite.spritecollide(bullet, player.level.platform_list, False)                                                    
@@ -869,13 +901,9 @@ def main(TimetoKillPlayer):
     
             #calculate bullet mechanics
             for bullet in bullet_list:
-
                 #see if a bullet hits a platform
-                block_hit_list = pygame.sprite.spritecollide(bullet, player.level.platform_list, False)
-             
-
-                for block in block_hit_list:
-                    
+                block_hit_list = pygame.sprite.spritecollide(bullet, player.level.platform_list, False)            
+                for block in block_hit_list:                   
                     #update both lists
                     bullet_list.remove(bullet)
                     active_sprite_list.remove(bullet)
@@ -888,19 +916,19 @@ def main(TimetoKillPlayer):
                         active_sprite_list.remove(bullet)
                         BossKill += 1              
                         if BossKill == 5:
-                            boss1.kill
+                            setScore(score + 1000)
+                            boss1.kill()
                             boss1.alive = False
                     #Score(screen,SCREEN_WIDTH,SCREEN_HEIGHT,1000)
                 for i in listofmobs:
-                    if bullet.rect.x in range(i.rect.x-1,i.rect.x+5) and bullet.rect.y in range(i.rect.y,i.rect.y+50):                 
+                    if bullet.rect.x in range(i.rect.x-10,i.rect.x+40) and bullet.rect.y in range(i.rect.y-2,i.rect.y+50):                 
                        setScore(score + 100)
                        bullet_list.remove(bullet)
                        active_sprite_list.remove(bullet)
                        active_sprite_list.remove(i)
                        listofmobs.remove(i)
                        
-            # need to put set score function whenever a mod is killed
-            #need to put minus health function + game Lose function whenever a bullet hits the player
+                    
                        #Score(screen,SCREEN_WIDTH,SCREEN_HEIGHT,100)
                 #end bullet for player
             for i in listofmobs:
@@ -913,7 +941,9 @@ def main(TimetoKillPlayer):
                         #every 2 seconds shot                      
                         if intervals % 60 == 0 and intervals == 60:
                             intervals = 0  
-                            vel = 5
+                            vel = 10
+                            pygame.mixer.music.load("Alien Death Ray-SoundBible.com-1203224011.mp3")
+                            pygame.mixer.music.play(0,0.0)
                             mobull = mobBullet(vel,player,active_sprite_list,bullet_list1,screen)
                             mobull.rect.x = i.rect.x + 6
                             mobull.rect.y = i.rect.y + 20
@@ -921,7 +951,7 @@ def main(TimetoKillPlayer):
                             bullet_list1.add(mobull)
                             #active_sprite_list.update()
                             for bull in bullet_list1:
-                                active_sprite_list.update()
+                                #active_sprite_list.update()
                                 block_hit_list = pygame.sprite.spritecollide(bull, i.level.platform_list, False)
                        
                                 for block in block_hit_list:                                   
@@ -929,18 +959,9 @@ def main(TimetoKillPlayer):
                                     active_sprite_list.remove(bull)                                                                                           
                                     
                                 if bull.rect.x > SCREEN_WIDTH:
-                                    print('bullet - ' + str(bull.rect.y))
                                     bullet_list1.remove(bull)
                                     active_sprite_list.remove(bull)
-                                #print('bullet - ' + str(bull.rect.y))
-                                #print('player - ' + str(player.rect.y))
-                                '''if bull.rect.x in range(player.rect.x-20, player.rect.x+20) and bull.rect.y in range(player.rect.y-2, player.rect.y+40):
-                                    print('True')
-                                    TimetoKillPlayer += 1                         
-                                    minusHealth(screen)
-                                    if minusHealth(screen) == False:
-                                        loseGame(screen)
-                                        done = True'''                                                                      
+                                                                                                    
                 elif i.movement == 'left':
                     #set when to start shoting
                     newcor = player.rect.y + 40
@@ -949,26 +970,26 @@ def main(TimetoKillPlayer):
                         #every 2 seconds shot
                         if intervals1 % 60 == 0 and intervals1 == 60:
                             intervals1 = 0
-                            vel = -5
-                            mobull = mobBullet(vel,player,active_sprite_list,bullet_list11,screen)
+                            vel = -10
+                            
+                            pygame.mixer.music.load("Alien Death Ray-SoundBible.com-1203224011.mp3")
+                            pygame.mixer.music.play(0,0.0)
+                            mobull = mobBullet(vel,player,active_sprite_list,bullet_list1,screen)
                             mobull.rect.x = i.rect.x + 6
                             mobull.rect.y = i.rect.y + 20
                             active_sprite_list.add(mobull)
-                            bullet_list11.add(mobull)
-                            active_sprite_list.update()
-                            for bull in bullet_list11:
+                            bullet_list1.add(mobull)
+                            #active_sprite_list.update()
+                            for bull in bullet_list1:
                                 block_hit_list = pygame.sprite.spritecollide(bull, i.level.platform_list, False)
                                 for block in block_hit_list:
-                                    bullet_list11.remove(bull)
+                                    bullet_list1.remove(bull)
                                     active_sprite_list.remove(bull) 
                                                                                                                                                           
-                                if bull.rect.x > 0:
-                                    bullet_list11.remove(bull)
+                                if bull.rect.x < 0:
+                                    bullet_list1.remove(bull)
                                     active_sprite_list.remove(bull)                                                                                                   
-                            '''minusHealth(screen)
-                                    if minusHealth(screen) == False:
-                                        loseGame(screen)
-                                        done = True'''    
+                            
             
             
  
@@ -982,8 +1003,7 @@ def main(TimetoKillPlayer):
             # If the player gets near the left side, shift the world right (+x)
             if player.rect.left < 0:
                 player.rect.left = 0
-            
-                # shouldn't this be boss1?
+ 
             if lob[0].alive == False:
                 winGame(screen)
                 done = True
@@ -994,7 +1014,6 @@ def main(TimetoKillPlayer):
             drawHealth(screen)
             Score(screen, SCREEN_WIDTH, SCREEN_HEIGHT)
             #listofmobs[0].sight(screen)
-            
  
             # Limit to 60 frames per second
             clock.tick(60)
@@ -1008,4 +1027,4 @@ def main(TimetoKillPlayer):
     pygame.quit()
  
 if __name__ == "__main__":
-    main(TimetoKillPlayer)
+    main()
